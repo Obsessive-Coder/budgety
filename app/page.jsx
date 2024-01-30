@@ -1,9 +1,34 @@
+'use client'
+
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from '@/app/firebase/config';
 import Image from "next/image";
 import styles from "./page.module.css";
+import { useRouter } from 'next/navigation';
+import { signOut } from 'firebase/auth';
 
-export default function Home() {
+export default function Dashboard() {
+  const [user] = useAuthState(auth);
+  const router = useRouter();
+  const userSession = sessionStorage.getItem('user');
+
+  console.log({user})
+
+  const handleLogoutUser = () => {
+    signOut(auth);
+    sessionStorage.removeItem('user');
+  };
+
+  if (!user && !userSession) {
+    router.push('/register');
+  }
+
   return (
     <main className={styles.main}>
+      <button onClick={handleLogoutUser}>
+        Sign Out
+      </button>
+
       <div className={styles.description}>
         <p>
           Get started by editing&nbsp;
