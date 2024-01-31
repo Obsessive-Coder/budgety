@@ -20,14 +20,6 @@ const Header = ({ user, pathname, handleLogOut, handleToggleSidebar }) => {
       <Container>
         <Navbar.Brand href="/" as={Link}>Budgety</Navbar.Brand>
 
-        <Nav className="justify-content-end">
-          {user && (
-            <Button variant="link" className='nav-link text-start' onClick={handleLogOut}>
-              Logout
-            </Button>
-          )}      
-        </Nav>
-
         <Button
           variant="outline-primary"
           onClick={handleToggleSidebar}

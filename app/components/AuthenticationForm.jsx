@@ -1,6 +1,8 @@
 'use client'
 
 import React, { useState } from 'react';
+import { useSignInWithEmailAndPassword, useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
+import { auth } from '@/app/lib/firebase/config';
 import { UserAuth } from '@/app/lib/context/AuthContext';
 
 // React Bootstrap Components.
@@ -8,11 +10,35 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 
 const AuthenticationForm = ({toggleIsRegisterForm, isRegisterForm = false}) => {
-  const [username, setUsername] = useState(null);
-  const [email, setEmail] = useState(null);
-  const [password, setPassword] = useState(null);
-  const [passwordConfirm, setPasswordConfirm] = useState(null);
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [passwordConfirm, setPasswordConfirm] = useState('');
+  const [signInWithEmailAndPassword] = useSignInWithEmailAndPassword(auth);
+  const [createUserWithEmailAndPassword] = useCreateUserWithEmailAndPassword(auth);
   const { logInGoogle } = UserAuth();
+
+  const handleEmailLogin = async () => {
+    try {
+        const result = await signInWithEmailAndPassword(email.trim(), password.trim());
+        sessionStorage.setItem('user', true);
+        setEmail('');
+        setPassword('');
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+const handleEmailRegistration = async () => {
+  try {
+       const result = await createUserWithEmailAndPassword(email.trim(), password.trim());
+       sessionStorage.setItem('user', true);
+       setEmail('');
+       setPassword('');
+  } catch (error) {
+      console.error(error);
+  }
+};
   
   const handleGoogleLogin = async () => {
     try {
@@ -24,20 +50,28 @@ const AuthenticationForm = ({toggleIsRegisterForm, isRegisterForm = false}) => {
 
   const handleSubmit = event => {
     event.preventDefault();
+
+    if (isRegisterForm) {
+      handleEmailRegistration();
+    } else {
+      handleEmailLogin();
+    }
   };
 
   return (
     <Form onSubmit={handleSubmit}>
-      <Form.Group controlId="formUsername" className="my-3">
-        <Form.Label>Username</Form.Label>
-        <Form.Control
-          type="text"
-          placeholder="Enter username"
-          value={username}
-          onChange={e => setUsername(e.target.value)}
-          className="bg-dark-subtle"
-        />
-      </Form.Group>
+      {isRegisterForm && (
+        <Form.Group controlId="formUsername" className="my-3">
+          <Form.Label>Username</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Enter username"
+            value={username}
+            onChange={e => setUsername(e.target.value)}
+            className="bg-dark-subtle"
+          />
+        </Form.Group>
+      )}
 
       <Form.Group controlId="formEmail" className="my-3">
         <Form.Label>Email Address</Form.Label>

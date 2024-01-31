@@ -20,13 +20,9 @@ const Sidebar = ({ isOpen, user, handleToggleSidebar, handleLogIn, handleLogOut 
                 id="offcanvasNavbarLabel-expand"
                 aria-labelledby="offcanvasNavbarLabel-expand"
                 placement="start"
+                // show={isOpen}
+                onHide={handleToggleSidebar}
             >
-                <Offcanvas.Header closeButton show={isOpen} onHide={handleToggleSidebar}>
-                    <Offcanvas.Title id="offcanvasNavbarLabel-expand">
-                        <Navbar.Brand href="/" as={Link} className="border-bottom border-3">Budgety</Navbar.Brand>
-                    </Offcanvas.Title>
-                </Offcanvas.Header>
-
                 <Offcanvas.Body>
                     <Nav className="flex-column justify-content-center flex-grow-1 p-3">
                         <Link href="/" className='nav-link'>Dashboard</Link>
