@@ -2,9 +2,9 @@ import React from 'react'
 
 const AboutPage = () => {
   return (
-    <main className="p-4">
+    <section>
       <h1>About Page</h1>
-    </main>
+    </section>
   )
 }
 

@@ -1,10 +1,22 @@
+'use client'
+
 import React from 'react'
 
+import { UserAuth } from '@/app/lib/context/AuthContext';
+
 const ProfilePage = () => {
+  const { user } = UserAuth();
+
   return (
-    <main className="p-4">
+    <section>
       <h1>Profile Page</h1>
-    </main>
+
+      {user ? (
+        <p>Welcome, {user.displayName}</p>
+      ) : (
+        <p>Protected Route</p>
+      )}
+    </section>
   )
 }
 

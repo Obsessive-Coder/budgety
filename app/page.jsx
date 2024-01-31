@@ -1,7 +1,7 @@
 export default function DashboardPage() {
   return (
-    <main className="p-4">
+    <section>
       <h1>Dashboard Page</h1>
-    </main>
+    </section>
   );
 }

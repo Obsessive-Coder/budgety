@@ -16,4 +16,8 @@ const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 
 const auth = getAuth(app);
 
+export async function getAuthenticatedAppForUser(session = null) {
+    console.log("client: ", app);
+}
+
 export { app, auth };

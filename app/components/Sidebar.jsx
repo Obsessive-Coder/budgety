@@ -6,44 +6,35 @@ import React from 'react'
 import Link from 'next/link'
 
 // React Bootstrap Components.
+import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 
-const MainNavbar = () => {
+const Sidebar = ({ isOpen, user, handleToggleSidebar, handleLogIn, handleLogOut }) => {
   return (
-    <Navbar expand="lg" className="bg-body-tertiary mb-3">
-        <Container fluid>
-            <Navbar.Brand href="/" as={Link}>
-                Budgety
-            </Navbar.Brand>
-
-            <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-
+    <Navbar expand={isOpen} className="bg-body-tertiary">
+        <Container fluid className="flex-column">
             <Navbar.Offcanvas
                 id="offcanvasNavbarLabel-expand"
                 aria-labelledby="offcanvasNavbarLabel-expand"
-                placement="end"
+                placement="start"
             >
-                <Offcanvas.Header closeButton>
+                <Offcanvas.Header closeButton show={isOpen} onHide={handleToggleSidebar}>
                     <Offcanvas.Title id="offcanvasNavbarLabel-expand">
-                        <Navbar.Brand href="/" as={Link}>
-                            Budgety
-                        </Navbar.Brand>
+                        <Navbar.Brand href="/" as={Link} className="border-bottom border-3">Budgety</Navbar.Brand>
                     </Offcanvas.Title>
                 </Offcanvas.Header>
 
                 <Offcanvas.Body>
-                    <Nav className="justify-content-center flex-grow-1 pe-3">
+                    <Nav className="flex-column justify-content-center flex-grow-1 p-3">
                         <Link href="/" className='nav-link'>Dashboard</Link>
                         <Link href="/profile" className='nav-link'>Profile</Link>
                         <Link href="/about" className='nav-link'>About</Link>
-                    </Nav>
-
-                    <Nav className="justify-content-end pe-3">
-                        <Link href="/login" className='nav-link'>Login</Link>
-                        <Link href="/register" className='nav-link'>Register</Link>
+                        <Button variant="link" className='nav-link text-start' onClick={handleLogOut}>
+                            Logout
+                        </Button>
                     </Nav>
                 </Offcanvas.Body>
             </Navbar.Offcanvas>
@@ -52,4 +43,4 @@ const MainNavbar = () => {
   )
 }
 
-export default MainNavbar
+export default Sidebar
