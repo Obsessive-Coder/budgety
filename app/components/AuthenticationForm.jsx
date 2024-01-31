@@ -8,6 +8,7 @@ import { UserAuth } from '@/app/lib/context/AuthContext';
 // React Bootstrap Components.
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import FloatingLabel from 'react-bootstrap/FloatingLabel';
 
 const AuthenticationForm = ({toggleIsRegisterForm, isRegisterForm = false}) => {
   const [username, setUsername] = useState('');
@@ -62,49 +63,53 @@ const handleEmailRegistration = async () => {
     <Form onSubmit={handleSubmit}>
       {isRegisterForm && (
         <Form.Group controlId="formUsername" className="my-3">
-          <Form.Label>Username</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Enter username"
-            value={username}
-            onChange={e => setUsername(e.target.value)}
-            className="bg-dark-subtle"
-          />
+          <FloatingLabel controlId="floatingUsername" label="Username">
+            <Form.Control
+              type="text"
+              placeholder="Enter username"
+              value={username}
+              onChange={e => setUsername(e.target.value)}
+              className="bg-dark-subtle"
+            />
+          </FloatingLabel>
         </Form.Group>
       )}
 
       <Form.Group controlId="formEmail" className="my-3">
-        <Form.Label>Email Address</Form.Label>
-        <Form.Control
-          type="email"
-          placeholder="Enter email"
-          value={email} 
-          onChange={e => setEmail(e.target.value)}
-          className="bg-dark-subtle"
-        />
+        <FloatingLabel controlId="floatingEmail" label="Email">
+          <Form.Control
+            type="email"
+            placeholder="Enter email"
+            value={email} 
+            onChange={e => setEmail(e.target.value)}
+            className="bg-dark-subtle"
+          />
+        </FloatingLabel>
       </Form.Group>
 
       <Form.Group controlId="formPassword" className="my-3">
-        <Form.Label>Password</Form.Label>
-        <Form.Control
-          type="password"
-          placeholder="Enter password"
-          value={password}
-          onChange={e => setPassword(e.target.value)}
-          className="bg-dark-subtle"
-        />
+        <FloatingLabel controlId="floatingPassword" label="Password">
+          <Form.Control
+            type="password"
+            placeholder="Enter password"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+            className="bg-dark-subtle"
+          />
+        </FloatingLabel>
       </Form.Group>
 
       {isRegisterForm && (
         <Form.Group controlId="formPasswordConfirm" className="my-3">
-          <Form.Label>Confirm Password</Form.Label>
-          <Form.Control
-            type="password"
-            placeholder="Confirm password"
-            value={passwordConfirm}
-            onChange={e => setPasswordConfirm(e.target.value)}
-            className="bg-dark-subtle"
-          />
+          <FloatingLabel controlId="floatingPasswordConfirm" label="Confirm Password">
+            <Form.Control
+              type="password"
+              placeholder="Confirm password"
+              value={passwordConfirm}
+              onChange={e => setPasswordConfirm(e.target.value)}
+              className="bg-dark-subtle"
+            />
+          </FloatingLabel>
         </Form.Group>
       )}
 
