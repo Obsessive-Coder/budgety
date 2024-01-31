@@ -8,6 +8,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 
 const AuthenticationForm = ({toggleIsRegisterForm, isRegisterForm = false}) => {
+  const [username, setUsername] = useState(null);
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
   const [passwordConfirm, setPasswordConfirm] = useState(null);
@@ -27,6 +28,17 @@ const AuthenticationForm = ({toggleIsRegisterForm, isRegisterForm = false}) => {
 
   return (
     <Form onSubmit={handleSubmit}>
+      <Form.Group controlId="formUsername" className="my-3">
+        <Form.Label>Username</Form.Label>
+        <Form.Control
+          type="text"
+          placeholder="Enter username"
+          value={username}
+          onChange={e => setUsername(e.target.value)}
+          className="bg-dark-subtle"
+        />
+      </Form.Group>
+
       <Form.Group controlId="formEmail" className="my-3">
         <Form.Label>Email Address</Form.Label>
         <Form.Control
@@ -42,7 +54,7 @@ const AuthenticationForm = ({toggleIsRegisterForm, isRegisterForm = false}) => {
         <Form.Label>Password</Form.Label>
         <Form.Control
           type="password"
-          placeholder="Password"
+          placeholder="Enter password"
           value={password}
           onChange={e => setPassword(e.target.value)}
           className="bg-dark-subtle"
@@ -54,7 +66,7 @@ const AuthenticationForm = ({toggleIsRegisterForm, isRegisterForm = false}) => {
           <Form.Label>Confirm Password</Form.Label>
           <Form.Control
             type="password"
-            placeholder="Confirm Password"
+            placeholder="Confirm password"
             value={passwordConfirm}
             onChange={e => setPasswordConfirm(e.target.value)}
             className="bg-dark-subtle"

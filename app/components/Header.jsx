@@ -21,12 +21,10 @@ const Header = ({ user, pathname, handleLogOut, handleToggleSidebar }) => {
         <Navbar.Brand href="/" as={Link}>Budgety</Navbar.Brand>
 
         <Nav className="justify-content-end">
-          {user ? (
+          {user && (
             <Button variant="link" className='nav-link text-start' onClick={handleLogOut}>
               Logout
             </Button>
-          ) : (
-            <Link href={`/${authPathname}`} className="nav-link text-capitalize">{authPathname}</Link>
           )}      
         </Nav>
 
