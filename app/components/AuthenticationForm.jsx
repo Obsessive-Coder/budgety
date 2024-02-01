@@ -15,6 +15,8 @@ import FloatingLabel from 'react-bootstrap/FloatingLabel';
 const AuthenticationForm = () => {
   const { Formik } = formik;
   const [isRegisterForm, setIsRegisterForm] = useState(false);
+  const [user, setUser] = useState(undefined);
+  const [userError, setUserError] = useState(undefined);
   const toggleIsRegisterForm = () => setIsRegisterForm(!isRegisterForm);
   const [signInWithEmailAndPassword] = useSignInWithEmailAndPassword(auth);
   const [createUserWithEmailAndPassword] = useCreateUserWithEmailAndPassword(auth);
@@ -41,8 +43,16 @@ const handleEmailLogin = async (formData) => {
   try {
     const { email, password } = formData;
     const result = await signInWithEmailAndPassword(email.trim(), password.trim());
+
+    if (!result?.user) {
+      setUserError('Unknown User. Please try again.');
+      throw new Error('Unknown User');
+    }
+
+    setUserError(undefined);
     sessionStorage.setItem('user', true);
-    console.log('USER: ', result);
+    setUser(result.user);
+    console.log('USER: ', {result});
   } catch (error) {
       console.error(error);
   }
@@ -52,8 +62,16 @@ const handleEmailRegistration = async (formData) => {
   try {
        const { email, password } = formData;
        const result = await createUserWithEmailAndPassword(email.trim(), password.trim());
-       sessionStorage.setItem('user', true);
-       console.log('USER: ', result);
+
+       if (!result?.user) {
+        setUserError('Unknown Error. Please try again.');
+        throw new Error('Unknown Error');
+      }
+
+      setUserError(undefined);
+      sessionStorage.setItem('user', true);
+      setUser(result.user);
+      console.log('USER: ', result);
   } catch (error) {
       console.error(error);
   }
@@ -81,11 +99,16 @@ const handleEmailRegistration = async (formData) => {
       <Formik
         validationSchema={schema}
         onSubmit={handleAuthSubmit}
-        onChange={() => console.log('HERE AGAIN')}
         initialValues={{ email: '', password: '' }}
       >
         {({ handleSubmit, handleChange, values, touched, errors }) => (
           <Form noValidate onSubmit={handleSubmit}>
+            {userError && (
+              <Form.Control.Feedback type="invalid" className={userError ? 'd-block' : 'd-none'} style={{inlineSize: '265px', overflowWrap: 'break-word'}}>
+                {userError}
+              </Form.Control.Feedback>
+            )}
+
             <Form.Group controlId="formEmail" className="my-3">
               <FloatingLabel controlId="floatingEmail" label="Email">
                 <Form.Control
@@ -98,7 +121,7 @@ const handleEmailRegistration = async (formData) => {
                   className="bg-dark-subtle"
                 />
 
-                <Form.Control.Feedback type="invalid">
+                <Form.Control.Feedback type="invalid" style={{inlineSize: '265px', overflowWrap: 'break-word'}}>
                   {errors.email}
                 </Form.Control.Feedback>
               </FloatingLabel>
@@ -116,7 +139,7 @@ const handleEmailRegistration = async (formData) => {
                   className="bg-dark-subtle"
                 />
 
-                <Form.Control.Feedback type="invalid">
+                <Form.Control.Feedback type="invalid" style={{inlineSize: '265px', overflowWrap: 'break-word'}}>
                   {errors.password}
                 </Form.Control.Feedback>
               </FloatingLabel>
@@ -135,7 +158,7 @@ const handleEmailRegistration = async (formData) => {
                     className="bg-dark-subtle"
                   />
 
-                  <Form.Control.Feedback type="invalid">
+                  <Form.Control.Feedback type="invalid" style={{inlineSize: '265px', overflowWrap: 'break-word'}}>
                     {errors.passwordConfirm}
                   </Form.Control.Feedback>
                 </FloatingLabel>
