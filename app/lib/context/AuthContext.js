@@ -1,33 +1,65 @@
 'use client'
 
 import { useContext, createContext, useState, useEffect } from 'react';
-import { signInWithPopup, signOut, onAuthStateChanged, GoogleAuthProvider } from 'firebase/auth';
-import { auth } from '@/app/lib/firebase/config';
+import { useRouter, usePathname } from 'next/navigation';
+
+// Custom Imports.
+import { 
+    onAuthStateChanged,
+    loginEmailPassword,
+    registerEmailPassword,
+    loginGoogle,
+    logOut as _logOut
+} from '@/app/lib/firebase/auth';
 
 const AuthContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
     const [user, setUser] = useState(null);
+    const fullPathname = usePathname();
+    const router = useRouter();
 
-    const logInGoogle= () => {
-        const provider = new GoogleAuthProvider();
-        signInWithPopup(auth, provider);
+    const loginWithEmailPassword = (email, password) => {
+        return loginEmailPassword(email.trim(), password.trim());
+    };
+
+    const registerWithEmailPassword = (email, password) => {
+        return registerEmailPassword(email.trim(), password.trim());
+    };
+
+    const logInWithGoogle= () => {
+        return loginGoogle();
     };
 
     const logOut = () => {
-        signOut(auth);
+        return _logOut();
     };
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-            setUser(currentUser);
+        const unsubscribe = onAuthStateChanged((authUser) => {
+            let pathname = '/welcome';
+            const isAuthPage = fullPathname === '/welcome';
+    
+            if (authUser) {
+              pathname = isAuthPage ? '/' : fullPathname;
+              sessionStorage.setItem('user', JSON.stringify(authUser));
+            } else {
+              sessionStorage.removeItem('user');
+            }
+            
+            setUser(authUser);
+            router.push(pathname);
         });
 
-        return () => unsubscribe();
-    }, [user]);
+        return () => {
+            if (unsubscribe) {
+                unsubscribe();
+            }
+        };
+    }, [fullPathname, router, user]);
 
     return (
-        <AuthContext.Provider value={ {user, logInGoogle, logOut }}>
+        <AuthContext.Provider value={ {user, logInWithGoogle, loginWithEmailPassword, registerWithEmailPassword, logOut }}>
             {children}
         </AuthContext.Provider>
     );

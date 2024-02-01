@@ -1,10 +1,12 @@
 'use client'
 
 import React, { useState } from 'react';
-import { useSignInWithEmailAndPassword, useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
+
+// Form Validation.
 import * as formik from 'formik';
 import * as yup from 'yup';
-import { auth } from '@/app/lib/firebase/config';
+
+// Custom Imports.
 import { UserAuth } from '@/app/lib/context/AuthContext';
 
 // React Bootstrap Components.
@@ -14,13 +16,11 @@ import FloatingLabel from 'react-bootstrap/FloatingLabel';
 
 const AuthenticationForm = () => {
   const { Formik } = formik;
-  const [isRegisterForm, setIsRegisterForm] = useState(false);
-  const [user, setUser] = useState(undefined);
+  const { logInWithGoogle, loginWithEmailPassword, registerWithEmailPassword } = UserAuth();
+
   const [userError, setUserError] = useState(undefined);
+  const [isRegisterForm, setIsRegisterForm] = useState(false);
   const toggleIsRegisterForm = () => setIsRegisterForm(!isRegisterForm);
-  const [signInWithEmailAndPassword] = useSignInWithEmailAndPassword(auth);
-  const [createUserWithEmailAndPassword] = useCreateUserWithEmailAndPassword(auth);
-  const { logInGoogle } = UserAuth();
 
   const passwordRegex = new RegExp('(?=[A-Za-z0-9@#$%^&+!=]+$)^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[@#$%^&+!=])(?=.{8,}).*$');
   const passwordSchema = yup.string().required('password is a required field').min(8, 'Password must be at least 8 characters')
@@ -42,17 +42,14 @@ const AuthenticationForm = () => {
 const handleEmailLogin = async (formData) => {
   try {
     const { email, password } = formData;
-    const result = await signInWithEmailAndPassword(email.trim(), password.trim());
+    const userCredential = await loginWithEmailPassword(email.trim(), password.trim());
 
-    if (!result?.user) {
+    if (!userCredential?.user) {
       setUserError('Unknown User. Please try again.');
       throw new Error('Unknown User');
     }
 
     setUserError(undefined);
-    sessionStorage.setItem('user', true);
-    setUser(result.user);
-    console.log('USER: ', {result});
   } catch (error) {
       console.error(error);
   }
@@ -61,17 +58,14 @@ const handleEmailLogin = async (formData) => {
 const handleEmailRegistration = async (formData) => {
   try {
        const { email, password } = formData;
-       const result = await createUserWithEmailAndPassword(email.trim(), password.trim());
+       const userCredential = await registerWithEmailPassword(email.trim(), password.trim());
 
-       if (!result?.user) {
+       if (!userCredential?.user) {
         setUserError('Unknown Error. Please try again.');
         throw new Error('Unknown Error');
       }
 
       setUserError(undefined);
-      sessionStorage.setItem('user', true);
-      setUser(result.user);
-      console.log('USER: ', result);
   } catch (error) {
       console.error(error);
   }
@@ -79,7 +73,14 @@ const handleEmailRegistration = async (formData) => {
   
   const handleGoogleLogin = async () => {
     try {
-      await logInGoogle();
+      const userCredential = await logInWithGoogle();
+
+      if (!userCredential?.user) {
+        setUserError('Unknown user. Please try again later.');
+        throw new Error('Unknown user. Please try again later.');
+      }
+
+      setUserError(undefined);
     } catch (error) {
       console.error(error);
     }

@@ -12,7 +12,7 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 
-const Sidebar = ({ isOpen, user, handleToggleSidebar, handleLogIn, handleLogOut }) => {
+const Sidebar = ({ isOpen, handleToggleSidebar, handleLogOut }) => {
   return (
     <Navbar expand={isOpen} className="bg-body-tertiary">
         <Container fluid className="flex-column">

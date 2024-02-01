@@ -9,7 +9,7 @@ import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
 import { List as ListIcon } from 'react-bootstrap-icons';
 
-const Header = ({ user, pathname, handleLogOut, handleToggleSidebar }) => {
+const Header = ({ pathname, handleToggleSidebar }) => {
   let authPathname = pathname.split('/')[1]
   authPathname = authPathname === 'login' ? 'register' : 'login';
     
