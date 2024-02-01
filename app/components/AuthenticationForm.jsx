@@ -1,10 +1,12 @@
 'use client'
 
 import React, { useState } from 'react';
-import { useSignInWithEmailAndPassword, useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
+
+// Form Validation.
 import * as formik from 'formik';
 import * as yup from 'yup';
-import { auth } from '@/app/lib/firebase/config';
+
+// Custom Imports.
 import { UserAuth } from '@/app/lib/context/AuthContext';
 
 // React Bootstrap Components.
@@ -14,11 +16,11 @@ import FloatingLabel from 'react-bootstrap/FloatingLabel';
 
 const AuthenticationForm = () => {
   const { Formik } = formik;
+  const { logInWithGoogle, loginWithEmailPassword, registerWithEmailPassword } = UserAuth();
+
+  const [userError, setUserError] = useState(undefined);
   const [isRegisterForm, setIsRegisterForm] = useState(false);
   const toggleIsRegisterForm = () => setIsRegisterForm(!isRegisterForm);
-  const [signInWithEmailAndPassword] = useSignInWithEmailAndPassword(auth);
-  const [createUserWithEmailAndPassword] = useCreateUserWithEmailAndPassword(auth);
-  const { logInGoogle } = UserAuth();
 
   const passwordRegex = new RegExp('(?=[A-Za-z0-9@#$%^&+!=]+$)^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[@#$%^&+!=])(?=.{8,}).*$');
   const passwordSchema = yup.string().required('password is a required field').min(8, 'Password must be at least 8 characters')
@@ -40,9 +42,14 @@ const AuthenticationForm = () => {
 const handleEmailLogin = async (formData) => {
   try {
     const { email, password } = formData;
-    const result = await signInWithEmailAndPassword(email.trim(), password.trim());
-    sessionStorage.setItem('user', true);
-    console.log('USER: ', result);
+    const userCredential = await loginWithEmailPassword(email.trim(), password.trim());
+
+    if (!userCredential?.user) {
+      setUserError('Unknown User. Please try again.');
+      throw new Error('Unknown User');
+    }
+
+    setUserError(undefined);
   } catch (error) {
       console.error(error);
   }
@@ -51,9 +58,14 @@ const handleEmailLogin = async (formData) => {
 const handleEmailRegistration = async (formData) => {
   try {
        const { email, password } = formData;
-       const result = await createUserWithEmailAndPassword(email.trim(), password.trim());
-       sessionStorage.setItem('user', true);
-       console.log('USER: ', result);
+       const userCredential = await registerWithEmailPassword(email.trim(), password.trim());
+
+       if (!userCredential?.user) {
+        setUserError('Unknown Error. Please try again.');
+        throw new Error('Unknown Error');
+      }
+
+      setUserError(undefined);
   } catch (error) {
       console.error(error);
   }
@@ -61,7 +73,14 @@ const handleEmailRegistration = async (formData) => {
   
   const handleGoogleLogin = async () => {
     try {
-      await logInGoogle();
+      const userCredential = await logInWithGoogle();
+
+      if (!userCredential?.user) {
+        setUserError('Unknown user. Please try again later.');
+        throw new Error('Unknown user. Please try again later.');
+      }
+
+      setUserError(undefined);
     } catch (error) {
       console.error(error);
     }
@@ -81,11 +100,16 @@ const handleEmailRegistration = async (formData) => {
       <Formik
         validationSchema={schema}
         onSubmit={handleAuthSubmit}
-        onChange={() => console.log('HERE AGAIN')}
         initialValues={{ email: '', password: '' }}
       >
         {({ handleSubmit, handleChange, values, touched, errors }) => (
           <Form noValidate onSubmit={handleSubmit}>
+            {userError && (
+              <Form.Control.Feedback type="invalid" className={userError ? 'd-block' : 'd-none'} style={{inlineSize: '265px', overflowWrap: 'break-word'}}>
+                {userError}
+              </Form.Control.Feedback>
+            )}
+
             <Form.Group controlId="formEmail" className="my-3">
               <FloatingLabel controlId="floatingEmail" label="Email">
                 <Form.Control
@@ -98,7 +122,7 @@ const handleEmailRegistration = async (formData) => {
                   className="bg-dark-subtle"
                 />
 
-                <Form.Control.Feedback type="invalid">
+                <Form.Control.Feedback type="invalid" style={{inlineSize: '265px', overflowWrap: 'break-word'}}>
                   {errors.email}
                 </Form.Control.Feedback>
               </FloatingLabel>
@@ -116,7 +140,7 @@ const handleEmailRegistration = async (formData) => {
                   className="bg-dark-subtle"
                 />
 
-                <Form.Control.Feedback type="invalid">
+                <Form.Control.Feedback type="invalid" style={{inlineSize: '265px', overflowWrap: 'break-word'}}>
                   {errors.password}
                 </Form.Control.Feedback>
               </FloatingLabel>
@@ -135,7 +159,7 @@ const handleEmailRegistration = async (formData) => {
                     className="bg-dark-subtle"
                   />
 
-                  <Form.Control.Feedback type="invalid">
+                  <Form.Control.Feedback type="invalid" style={{inlineSize: '265px', overflowWrap: 'break-word'}}>
                     {errors.passwordConfirm}
                   </Form.Control.Feedback>
                 </FloatingLabel>
