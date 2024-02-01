@@ -20,7 +20,6 @@ const Sidebar = ({ isOpen, user, handleToggleSidebar, handleLogIn, handleLogOut 
                 id="offcanvasNavbarLabel-expand"
                 aria-labelledby="offcanvasNavbarLabel-expand"
                 placement="start"
-                // show={isOpen}
                 onHide={handleToggleSidebar}
             >
                 <Offcanvas.Body>
