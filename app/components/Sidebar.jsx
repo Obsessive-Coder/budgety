@@ -21,7 +21,10 @@ import ToggleSwitch from './ToggleSwitch';
 
 const navItems = ['dashboard', 'profile', 'about'];
 
-const Sidebar = ({ isOpen, handleToggleSidebar, handleLogOut }) => {
+const Sidebar = ({ isOpen, pathname, handleToggleSidebar, handleLogOut }) => {
+  const pathnameIndex = navItems.indexOf(pathname.split('/')[1]);
+  const activeNavKey = pathnameIndex >= 0 ? pathnameIndex : 0;
+  
   return (
     <div className="position-relative">
         <Button
@@ -45,12 +48,34 @@ const Sidebar = ({ isOpen, handleToggleSidebar, handleLogOut }) => {
                         placement="start"
                         onHide={handleToggleSidebar}
                     >
+                        <Offcanvas.Header closeButton>
+                            <ToggleSwitch />
+                        </Offcanvas.Header>
+                        
                         <Offcanvas.Body>
-                            <Nav className="flex-column justify-content-center flex-grow-1 p-3">
-                                {navItems.map(labelText => (
-                                    <Link key={`nav-item-${labelText}`} href={`/${labelText !== 'dashboard' ? labelText : ''}`} className="nav-link px-2">
-                                        {labelText}
-                                    </Link>
+                            <Nav 
+                                activeKey={activeNavKey}
+                                className="flex-column justify-content-center flex-grow-1 p-3"
+                            >
+                                {navItems.map((labelText, index) => (
+                                    <Nav.Item key={`nav-item-${labelText}`}>
+                                        <Nav.Link
+                                            as={Link}
+                                            eventKey={index}
+                                            href={`/${labelText !== 'dashboard' ? labelText : ''}`}
+                                            className="text-capitalize"
+                                        >
+                                            {labelText}
+                                        </Nav.Link>
+                                    </Nav.Item>
+
+                                    // <Link
+                                    //     key={`nav-item-${labelText}`}
+                                    //     href={`/${labelText !== 'dashboard' ? labelText : ''}`}
+                                    //     className="nav-link px-2"
+                                    // >
+                                    //     {labelText}
+                                    // </Link>
                                 ))}
                                 
                                 <Button variant="link" className='nav-link px-2 text-start' onClick={handleLogOut}>

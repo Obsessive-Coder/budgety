@@ -7,11 +7,7 @@ import Link from 'next/link'
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
 
-const Header = ({ pathname, handleToggleSidebar }) => {
-  let authPathname = pathname.split('/')[1]
-  authPathname = authPathname === 'login' ? 'register' : 'login';
-    
-
+const Header = () => {
   return (
     <Navbar collapseOnSelect  expand={"sm"} className="bg-body-tertiary">
       <Container>

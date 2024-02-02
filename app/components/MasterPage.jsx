@@ -12,7 +12,7 @@ import Sidebar from '@/app/components/Sidebar'
 const MasterPage = ({ children }) => {
     const { user, logOut } = UserAuth();
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-    const fullPathname = usePathname();
+    const pathname = usePathname();
 
   const handleLogOut = async () => {
       try {
@@ -28,12 +28,13 @@ const MasterPage = ({ children }) => {
 
   return (
     <div>
-      <Header pathname={fullPathname} handleToggleSidebar={toggleSidebarIsOpen} />
+      <Header />
 
       <main className="d-flex">
         {user && (
           <Sidebar
             isOpen={isSidebarOpen}
+            pathname={pathname}
             handleToggleSidebar={toggleSidebarIsOpen}
             handleLogOut={handleLogOut}
           />
