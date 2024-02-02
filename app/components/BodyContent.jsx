@@ -9,8 +9,11 @@ import MasterPage from './MasterPage';
 const inter = Inter({ subsets: ["latin"] });
 
 const BodyContent = ({ children }) => {
-  const [isDarkMode, setIsDarkMode] = useState(false);
-  const toggleIsDarkMode = () => setIsDarkMode(!isDarkMode);
+  const [isDarkMode, setIsDarkMode] = useState(sessionStorage.getItem('isDarkMode') === 'true' || false);
+  const toggleIsDarkMode = () => {
+    sessionStorage.setItem('isDarkMode', !isDarkMode)
+    setIsDarkMode(!isDarkMode)
+  };
 
   return (
     <body className={inter.className} data-bs-theme={isDarkMode ? 'dark' : 'light'}>
