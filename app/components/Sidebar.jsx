@@ -11,8 +11,15 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Offcanvas from 'react-bootstrap/Offcanvas';
+import {
+    Moon as MoonIcon,
+    MoonFill as MoonFillIcon
+} from 'react-bootstrap-icons';
 
-const Sidebar = ({ isOpen, handleToggleSidebar, handleLogOut }) => {
+// Custom Components.
+import ToggleSwitch from './ToggleSwitch';
+
+const Sidebar = ({ isOpen, theme, handleSetTheme, handleToggleSidebar, handleLogOut }) => {
   return (
     <Navbar expand={isOpen} className="bg-body-tertiary">
         <Container fluid className="flex-column">
@@ -24,10 +31,19 @@ const Sidebar = ({ isOpen, handleToggleSidebar, handleLogOut }) => {
             >
                 <Offcanvas.Body>
                     <Nav className="flex-column justify-content-center flex-grow-1 p-3">
-                        <Link href="/" className='nav-link'>Dashboard</Link>
-                        <Link href="/profile" className='nav-link'>Profile</Link>
-                        <Link href="/about" className='nav-link'>About</Link>
-                        <Button variant="link" className='nav-link text-start' onClick={handleLogOut}>
+                        {/* <Nav.Item className="px-2">
+                            <ToggleSwitch labelText={theme} handleOnChange={handleSetTheme}>
+                                {theme === 'dark' ? (
+                                    <MoonFillIcon size="18" />
+                                ) : (
+                                    <MoonIcon size="18" />
+                                )}
+                            </ToggleSwitch>
+                        </Nav.Item> */}
+                        <Link href="/" className='nav-link px-2'>Dashboard</Link>
+                        <Link href="/profile" className='nav-link px-2'>Profile</Link>
+                        <Link href="/about" className='nav-link px-2'>About</Link>
+                        <Button variant="link" className='nav-link px-2 text-start' onClick={handleLogOut}>
                             Logout
                         </Button>
                     </Nav>
