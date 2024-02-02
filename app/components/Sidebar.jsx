@@ -31,7 +31,7 @@ const Sidebar = ({ isOpen, theme, handleSetTheme, handleToggleSidebar, handleLog
             >
                 <Offcanvas.Body>
                     <Nav className="flex-column justify-content-center flex-grow-1 p-3">
-                        <Nav.Item className="px-2">
+                        {/* <Nav.Item className="px-2">
                             <ToggleSwitch labelText={theme} handleOnChange={handleSetTheme}>
                                 {theme === 'dark' ? (
                                     <MoonFillIcon size="18" />
@@ -39,7 +39,7 @@ const Sidebar = ({ isOpen, theme, handleSetTheme, handleToggleSidebar, handleLog
                                     <MoonIcon size="18" />
                                 )}
                             </ToggleSwitch>
-                        </Nav.Item>
+                        </Nav.Item> */}
                         <Link href="/" className='nav-link px-2'>Dashboard</Link>
                         <Link href="/profile" className='nav-link px-2'>Profile</Link>
                         <Link href="/about" className='nav-link px-2'>About</Link>
