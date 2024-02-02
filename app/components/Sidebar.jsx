@@ -15,7 +15,8 @@ import {
     ArrowBarLeft as ArrowBarLeftIcon,
     ArrowBarRight as ArrowBarRightIcon,
     Moon as MoonIcon,
-    Sun as SunIcon
+    Sun as SunIcon,
+    X as XIcon
 } from 'react-bootstrap-icons';
 
 // Custom Components.
@@ -27,22 +28,12 @@ const Sidebar = ({ isOpen, pathname, isDarkMode, toggleIsDarkMode, handleToggleS
   const pathnameIndex = navItems.indexOf(pathname.split('/')[1]);
   const activeNavKey = pathnameIndex >= 0 ? pathnameIndex : 0;
 
+  const isSmallScreen = window.innerWidth >= 576;
+
   return (
     <div className="position-relative">
-        <Button
-            variant="outline-primary"
-            onClick={handleToggleSidebar}
-            className="position-absolute start-100 px-0 border-0 text-secondary"
-        >
-            {isOpen ? (
-                <ArrowBarLeftIcon size="28" />
-            ) : (
-                <ArrowBarRightIcon size="28" />
-            )}
-        </Button>
-
-        {isOpen && (
-            <Navbar expand={isOpen} className="bg-body-tertiary align-items-start">
+        {isOpen ? (
+            <Navbar expand={isOpen} className={`bg-body-tertiary align-items-start ${isSmallScreen ? '' : 'position-absolute'}`}>
                 <Container fluid className="flex-column">
                     <Navbar.Offcanvas
                         id="offcanvasNavbar-expand"
@@ -50,14 +41,14 @@ const Sidebar = ({ isOpen, pathname, isDarkMode, toggleIsDarkMode, handleToggleS
                         placement="start"
                         onHide={handleToggleSidebar}
                     >
-                        <Offcanvas.Header className="d-block px-3">
-                            <ToggleSwitch isActive={isDarkMode} handleOnChange={toggleIsDarkMode}>
-                                {isDarkMode ? (
-                                    <MoonIcon size="16" />
-                                ) : (
-                                    <SunIcon size="16" />
-                                )}
-                            </ToggleSwitch>
+                        <Offcanvas.Header className="d-block px-3 position-relative">
+                            <Button
+                                variant="link"
+                                onClick={handleToggleSidebar}
+                                className="position-absolute top-0 end-0 rounded-0 p-0"
+                            >
+                                <XIcon size="28" />
+                            </Button>
                         </Offcanvas.Header>
                         
                         <Offcanvas.Body className="px-3">
@@ -78,14 +69,34 @@ const Sidebar = ({ isOpen, pathname, isDarkMode, toggleIsDarkMode, handleToggleS
                                     </Nav.Item>
                                 ))}
                                 
-                                <Button variant="link" className='nav-link px-0 py-3 text-start' onClick={handleLogOut}>
-                                    Logout
-                                </Button>
+                                <Nav.Item>
+                                    <Button variant="link" className='nav-link px-0 py-3 text-start' onClick={handleLogOut}>
+                                        Logout
+                                    </Button>
+                                </Nav.Item>
+
+                                <Nav.Item>
+                                    <ToggleSwitch isActive={isDarkMode} handleOnChange={toggleIsDarkMode}>
+                                        {isDarkMode ? (
+                                            <MoonIcon size="16" />
+                                        ) : (
+                                            <SunIcon size="16" />
+                                        )}
+                                    </ToggleSwitch>
+                                </Nav.Item>
                             </Nav>
                         </Offcanvas.Body>
                     </Navbar.Offcanvas>
                 </Container>
             </Navbar>
+        ) : (
+            <Button
+                variant="link"
+                onClick={handleToggleSidebar}
+                className="position-absolute start-100 rounded-0 p-0"
+            >
+                <ArrowBarRightIcon size="28" />
+            </Button>
         )}
     </div>
   )
