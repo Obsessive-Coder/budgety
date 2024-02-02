@@ -14,6 +14,8 @@ import Offcanvas from 'react-bootstrap/Offcanvas';
 import {
     ArrowBarLeft as ArrowBarLeftIcon,
     ArrowBarRight as ArrowBarRightIcon,
+    Moon as MoonIcon,
+    Sun as SunIcon
 } from 'react-bootstrap-icons';
 
 // Custom Components.
@@ -21,10 +23,10 @@ import ToggleSwitch from './ToggleSwitch';
 
 const navItems = ['dashboard', 'profile', 'about'];
 
-const Sidebar = ({ isOpen, pathname, handleToggleSidebar, handleLogOut }) => {
+const Sidebar = ({ isOpen, pathname, isDarkMode, toggleIsDarkMode, handleToggleSidebar, handleLogOut }) => {
   const pathnameIndex = navItems.indexOf(pathname.split('/')[1]);
   const activeNavKey = pathnameIndex >= 0 ? pathnameIndex : 0;
-  
+
   return (
     <div className="position-relative">
         <Button
@@ -48,14 +50,20 @@ const Sidebar = ({ isOpen, pathname, handleToggleSidebar, handleLogOut }) => {
                         placement="start"
                         onHide={handleToggleSidebar}
                     >
-                        <Offcanvas.Header closeButton>
-                            <ToggleSwitch />
+                        <Offcanvas.Header className="d-block px-3">
+                            <ToggleSwitch isActive={isDarkMode} handleOnChange={toggleIsDarkMode}>
+                                {isDarkMode ? (
+                                    <MoonIcon size="16" />
+                                ) : (
+                                    <SunIcon size="16" />
+                                )}
+                            </ToggleSwitch>
                         </Offcanvas.Header>
                         
-                        <Offcanvas.Body>
+                        <Offcanvas.Body className="px-3">
                             <Nav 
                                 activeKey={activeNavKey}
-                                className="flex-column justify-content-center flex-grow-1 p-3"
+                                className="flex-column justify-content-center flex-grow-1"
                             >
                                 {navItems.map((labelText, index) => (
                                     <Nav.Item key={`nav-item-${labelText}`}>
@@ -63,22 +71,14 @@ const Sidebar = ({ isOpen, pathname, handleToggleSidebar, handleLogOut }) => {
                                             as={Link}
                                             eventKey={index}
                                             href={`/${labelText !== 'dashboard' ? labelText : ''}`}
-                                            className="text-capitalize"
+                                            className="px-0 py-3 text-capitalize"
                                         >
                                             {labelText}
                                         </Nav.Link>
                                     </Nav.Item>
-
-                                    // <Link
-                                    //     key={`nav-item-${labelText}`}
-                                    //     href={`/${labelText !== 'dashboard' ? labelText : ''}`}
-                                    //     className="nav-link px-2"
-                                    // >
-                                    //     {labelText}
-                                    // </Link>
                                 ))}
                                 
-                                <Button variant="link" className='nav-link px-2 text-start' onClick={handleLogOut}>
+                                <Button variant="link" className='nav-link px-0 py-3 text-start' onClick={handleLogOut}>
                                     Logout
                                 </Button>
                             </Nav>

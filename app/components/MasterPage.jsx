@@ -9,7 +9,7 @@ import Header from '@/app/components/Header';
 import Footer from '@/app/components/Footer';
 import Sidebar from '@/app/components/Sidebar'
 
-const MasterPage = ({ children }) => {
+const MasterPage = ({ children, isDarkMode = false, toggleIsDarkMode }) => {
     const { user, logOut } = UserAuth();
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
     const pathname = usePathname();
@@ -35,6 +35,8 @@ const MasterPage = ({ children }) => {
           <Sidebar
             isOpen={isSidebarOpen}
             pathname={pathname}
+            isDarkMode={isDarkMode}
+            toggleIsDarkMode={toggleIsDarkMode}
             handleToggleSidebar={toggleSidebarIsOpen}
             handleLogOut={handleLogOut}
           />
