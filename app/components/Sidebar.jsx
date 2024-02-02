@@ -14,15 +14,14 @@ import Offcanvas from 'react-bootstrap/Offcanvas';
 import {
     ArrowBarLeft as ArrowBarLeftIcon,
     ArrowBarRight as ArrowBarRightIcon,
-    List as ListIcon,
-    Moon as MoonIcon,
-    MoonFill as MoonFillIcon
 } from 'react-bootstrap-icons';
 
 // Custom Components.
 import ToggleSwitch from './ToggleSwitch';
 
-const Sidebar = ({ isOpen, theme, handleSetTheme, handleToggleSidebar, handleLogOut }) => {
+const navItems = ['dashboard', 'profile', 'about'];
+
+const Sidebar = ({ isOpen, handleToggleSidebar, handleLogOut }) => {
   return (
     <div className="position-relative">
         <Button
@@ -48,18 +47,12 @@ const Sidebar = ({ isOpen, theme, handleSetTheme, handleToggleSidebar, handleLog
                     >
                         <Offcanvas.Body>
                             <Nav className="flex-column justify-content-center flex-grow-1 p-3">
-                                {/* <Nav.Item className="px-2">
-                                    <ToggleSwitch labelText={theme} handleOnChange={handleSetTheme}>
-                                        {theme === 'dark' ? (
-                                            <MoonFillIcon size="18" />
-                                        ) : (
-                                            <MoonIcon size="18" />
-                                        )}
-                                    </ToggleSwitch>
-                                </Nav.Item> */}
-                                <Link href="/" className='nav-link px-2'>Dashboard</Link>
-                                <Link href="/profile" className='nav-link px-2'>Profile</Link>
-                                <Link href="/about" className='nav-link px-2'>About</Link>
+                                {navItems.map(labelText => (
+                                    <Link key={`nav-item-${labelText}`} href={`/${labelText !== 'dashboard' ? labelText : ''}`} className="nav-link px-2">
+                                        {labelText}
+                                    </Link>
+                                ))}
+                                
                                 <Button variant="link" className='nav-link px-2 text-start' onClick={handleLogOut}>
                                     Logout
                                 </Button>

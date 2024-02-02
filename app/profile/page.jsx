@@ -12,7 +12,7 @@ const ProfilePage = () => {
       <h1>Profile Page</h1>
 
       {user ? (
-        <p>Welcome, {user.displayName}</p>
+        <p>Welcome, {user.displayName || user.email}</p>
       ) : (
         <p>Protected Route</p>
       )}

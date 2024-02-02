@@ -11,7 +11,7 @@ const ToggleSwitch = ({ children, labelText, handleOnChange }) => {
         id="custom-switch"
         label={children ? children : labelText}
         checked={labelText === 'dark'}
-        onChange={() => handleOnChange(labelText === 'dark' ? 'theme-light' : 'theme-dark')}
+        onChange={() => handleOnChange(labelText === 'dark' ? 'light' : 'dark')}
         className="d-flex align-items-center justify-content-between"
       />
     </Form>
