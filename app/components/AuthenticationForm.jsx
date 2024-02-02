@@ -95,7 +95,7 @@ const handleEmailRegistration = async (formData) => {
   };
 
   return (
-    <section className="p-3 rounded border shadow">
+    <section className="p-3 rounded">
       <h3 className="text-center">{isRegisterForm ? 'Register' : 'Login'}</h3>
       <Formik
         validationSchema={schema}
@@ -119,7 +119,6 @@ const handleEmailRegistration = async (formData) => {
                   value={values.email} 
                   onChange={handleChange}
                   isInvalid={!!errors.email}
-                  // className="bg-dark-subtle"
                 />
 
                 <Form.Control.Feedback type="invalid" style={{inlineSize: '265px', overflowWrap: 'break-word'}}>
@@ -137,7 +136,6 @@ const handleEmailRegistration = async (formData) => {
                   value={values.password}
                   onChange={handleChange}
                   isInvalid={!!errors.password}
-                  // className="bg-dark-subtle"
                 />
 
                 <Form.Control.Feedback type="invalid" style={{inlineSize: '265px', overflowWrap: 'break-word'}}>
@@ -156,7 +154,6 @@ const handleEmailRegistration = async (formData) => {
                     value={values.passwordConfirm}
                     onChange={handleChange}
                     isInvalid={!!errors.passwordConfirm}
-                    // className="bg-dark-subtle"
                   />
 
                   <Form.Control.Feedback type="invalid" style={{inlineSize: '265px', overflowWrap: 'break-word'}}>
