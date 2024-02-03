@@ -12,26 +12,21 @@ import Image from 'react-bootstrap/Image';
 import { UserAuth } from '@/app/lib/context/AuthContext';
 
 const dropdownItems = ['profile', 'settings'];
+const defaultProfileImage = 'https://placehold.co/32x32/png';
 
 const UserImage = () => {
     const { user } = UserAuth();
-
     if (!user) return null;
-
-    const { photoURL, displayName = '', email } = user;
-
-    console.log(user)
+    const { photoURL } = user;
 
     return (
-        <Image roundedCircle src={photoURL ?? 'https://placehold.co/32x32/png'} alt="profile photo" className="user-image" />
+        <Image roundedCircle src={photoURL ?? defaultProfileImage} alt="profile photo" className="user-image" />
     );
 };
 
 const UserDropdown = ({ handleLogOut }) => {
     const { user } = UserAuth();
-
     if (!user) return null;
-
     const { displayName, email } = user;
 
   return (
@@ -44,7 +39,7 @@ const UserDropdown = ({ handleLogOut }) => {
             {labelText}
         </Dropdown.Item>
       ))}
-      
+
       <Dropdown.Item as="button" onClick={handleLogOut}>
         Logout
       </Dropdown.Item>
