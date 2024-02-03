@@ -28,15 +28,13 @@ const MasterPage = ({ children, isDarkMode = false, toggleIsDarkMode }) => {
 
   return (
     <div>
-      <Header />
+      <Header isDarkMode={isDarkMode} handleToggleIsDarkMode={toggleIsDarkMode} />
 
       <main className="d-flex">
         {user && (
           <Sidebar
             isOpen={isSidebarOpen}
             pathname={pathname}
-            isDarkMode={isDarkMode}
-            toggleIsDarkMode={toggleIsDarkMode}
             handleToggleSidebar={toggleSidebarIsOpen}
             handleLogOut={handleLogOut}
           />

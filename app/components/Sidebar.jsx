@@ -13,17 +13,12 @@ import Navbar from 'react-bootstrap/Navbar';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import {
     ArrowBarRight as ArrowBarRightIcon,
-    Moon as MoonIcon,
-    Sun as SunIcon,
     X as XIcon
 } from 'react-bootstrap-icons';
 
-// Custom Components.
-import ToggleSwitch from './ToggleSwitch';
-
 const navItems = ['dashboard', 'profile', 'about'];
 
-const Sidebar = ({ isOpen, pathname, isDarkMode, toggleIsDarkMode, handleToggleSidebar, handleLogOut }) => {
+const Sidebar = ({ isOpen, pathname, handleToggleSidebar, handleLogOut }) => {
   const pathnameIndex = navItems.indexOf(pathname.split('/')[1]);
   const activeNavKey = pathnameIndex >= 0 ? pathnameIndex : 0;
 
@@ -54,17 +49,7 @@ const Sidebar = ({ isOpen, pathname, isDarkMode, toggleIsDarkMode, handleToggleS
                             <Nav 
                                 activeKey={activeNavKey}
                                 className="flex-column justify-content-center flex-grow-1"
-                            >
-                                <Nav.Item>
-                                    <ToggleSwitch isActive={isDarkMode} handleOnChange={toggleIsDarkMode}>
-                                        {isDarkMode ? (
-                                            <MoonIcon size="16" />
-                                        ) : (
-                                            <SunIcon size="16" />
-                                        )}
-                                    </ToggleSwitch>
-                                </Nav.Item>
-                                
+                            >                                
                                 {navItems.map((labelText, index) => (
                                     <Nav.Item key={`nav-item-${labelText}`}>
                                         <Nav.Link
