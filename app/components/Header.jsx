@@ -10,8 +10,9 @@ import { Moon as MoonIcon, Sun as SunIcon } from 'react-bootstrap-icons';
 
 // Custom Components.
 import ToggleSwitch from './ToggleSwitch';
+import UserDropdown from './UserDropdown';
 
-const Header = ({ isDarkMode, handleToggleIsDarkMode }) => {
+const Header = ({ isDarkMode, handleToggleIsDarkMode, handleLogOut }) => {
   const ThemeIcon = isDarkMode ? MoonIcon : SunIcon;
 
   return (
@@ -19,9 +20,13 @@ const Header = ({ isDarkMode, handleToggleIsDarkMode }) => {
       <Container>
         <Navbar.Brand href="/" as={Link}>Budgety</Navbar.Brand>
 
-        <ToggleSwitch isActive={isDarkMode} handleOnChange={handleToggleIsDarkMode}>
-          <ThemeIcon size="16" className="mx-2" />
-        </ToggleSwitch>
+        <div className="d-flex align-items-center">
+          <ToggleSwitch isActive={isDarkMode} handleOnChange={handleToggleIsDarkMode} className="mx-3">
+            <ThemeIcon size="16" className="mx-2" />
+          </ToggleSwitch>
+
+          <UserDropdown handleLogOut={handleLogOut} />
+        </div>
       </Container>
     </Navbar>
   )

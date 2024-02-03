@@ -16,9 +16,9 @@ import {
     X as XIcon
 } from 'react-bootstrap-icons';
 
-const navItems = ['dashboard', 'profile', 'about'];
+const navItems = ['dashboard', 'about'];
 
-const Sidebar = ({ isOpen, pathname, handleToggleSidebar, handleLogOut }) => {
+const Sidebar = ({ isOpen, pathname, handleToggleSidebar }) => {
   const pathnameIndex = navItems.indexOf(pathname.split('/')[1]);
   const activeNavKey = pathnameIndex >= 0 ? pathnameIndex : 0;
 
@@ -62,12 +62,6 @@ const Sidebar = ({ isOpen, pathname, handleToggleSidebar, handleLogOut }) => {
                                         </Nav.Link>
                                     </Nav.Item>
                                 ))}
-                                
-                                <Nav.Item>
-                                    <Button variant="link" className='nav-link px-0 py-3 text-start' onClick={handleLogOut}>
-                                        Logout
-                                    </Button>
-                                </Nav.Item>
                             </Nav>
                         </Offcanvas.Body>
                     </Navbar.Offcanvas>

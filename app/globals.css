@@ -1,3 +1,14 @@
+.user-dropdown .dropdown-toggle::after {
+  display: none; 
+}
+
+.user-dropdown .dropdown-toggle {
+  background: transparent;
+  border-radius: 50%;
+  padding: 0;
+  border: none;
+}
+
 /* :root {
   --max-width: 1100px;
   --border-radius: 12px;
