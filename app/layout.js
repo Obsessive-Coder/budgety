@@ -1,10 +1,6 @@
-import { Inter } from "next/font/google";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import "./globals.css";
-import MasterPage from './components/MasterPage';
-import { AuthContextProvider } from "./lib/context/AuthContext";
-
-const inter = Inter({ subsets: ["latin"] });
+import './globals.css';
+import BodyContent from './components/BodyContent';
 
 export const metadata = {
   title: "Create Next App",
@@ -14,13 +10,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <AuthContextProvider>
-          <MasterPage>
-            {children}
-          </MasterPage>
-        </AuthContextProvider>
-      </body>
+      <BodyContent>{children}</BodyContent>
     </html>
   );
 }

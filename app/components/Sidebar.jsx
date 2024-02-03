@@ -12,45 +12,92 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import {
+    ArrowBarRight as ArrowBarRightIcon,
     Moon as MoonIcon,
-    MoonFill as MoonFillIcon
+    Sun as SunIcon,
+    X as XIcon
 } from 'react-bootstrap-icons';
 
 // Custom Components.
 import ToggleSwitch from './ToggleSwitch';
 
-const Sidebar = ({ isOpen, theme, handleSetTheme, handleToggleSidebar, handleLogOut }) => {
+const navItems = ['dashboard', 'profile', 'about'];
+
+const Sidebar = ({ isOpen, pathname, isDarkMode, toggleIsDarkMode, handleToggleSidebar, handleLogOut }) => {
+  const pathnameIndex = navItems.indexOf(pathname.split('/')[1]);
+  const activeNavKey = pathnameIndex >= 0 ? pathnameIndex : 0;
+
+  const isSmallScreen = window.innerWidth >= 576;
+
   return (
-    <Navbar expand={isOpen} className="bg-body-tertiary">
-        <Container fluid className="flex-column">
-            <Navbar.Offcanvas
-                id="offcanvasNavbarLabel-expand"
-                aria-labelledby="offcanvasNavbarLabel-expand"
-                placement="start"
-                onHide={handleToggleSidebar}
+    <div className="position-relative">
+        {isOpen ? (
+            <Navbar expand={isOpen} className={`bg-body-tertiary align-items-start ${isSmallScreen ? '' : 'position-absolute'}`}>
+                <Container fluid className="flex-column">
+                    <Navbar.Offcanvas
+                        id="offcanvasNavbar-expand"
+                        aria-labelledby="offcanvasNavbarLabel-expand"
+                        placement="start"
+                        onHide={handleToggleSidebar}
+                    >
+                        <Offcanvas.Header className="d-block px-3 position-relative">    
+                            <Button
+                                variant="link"
+                                onClick={handleToggleSidebar}
+                                className="position-absolute top-0 end-0 rounded-0 p-0"
+                            >
+                                <XIcon size="28" />
+                            </Button>
+                        </Offcanvas.Header>
+                        
+                        <Offcanvas.Body className="px-3">
+                            <Nav 
+                                activeKey={activeNavKey}
+                                className="flex-column justify-content-center flex-grow-1"
+                            >
+                                <Nav.Item>
+                                    <ToggleSwitch isActive={isDarkMode} handleOnChange={toggleIsDarkMode}>
+                                        {isDarkMode ? (
+                                            <MoonIcon size="16" />
+                                        ) : (
+                                            <SunIcon size="16" />
+                                        )}
+                                    </ToggleSwitch>
+                                </Nav.Item>
+                                
+                                {navItems.map((labelText, index) => (
+                                    <Nav.Item key={`nav-item-${labelText}`}>
+                                        <Nav.Link
+                                            as={Link}
+                                            eventKey={index}
+                                            href={`/${labelText !== 'dashboard' ? labelText : ''}`}
+                                            className="px-0 py-3 text-capitalize"
+                                        >
+                                            {labelText}
+                                        </Nav.Link>
+                                    </Nav.Item>
+                                ))}
+                                
+                                <Nav.Item>
+                                    <Button variant="link" className='nav-link px-0 py-3 text-start' onClick={handleLogOut}>
+                                        Logout
+                                    </Button>
+                                </Nav.Item>
+                            </Nav>
+                        </Offcanvas.Body>
+                    </Navbar.Offcanvas>
+                </Container>
+            </Navbar>
+        ) : (
+            <Button
+                variant="link"
+                onClick={handleToggleSidebar}
+                className="position-absolute start-100 rounded-0 p-0 bg-body-tertiary"
             >
-                <Offcanvas.Body>
-                    <Nav className="flex-column justify-content-center flex-grow-1 p-3">
-                        {/* <Nav.Item className="px-2">
-                            <ToggleSwitch labelText={theme} handleOnChange={handleSetTheme}>
-                                {theme === 'dark' ? (
-                                    <MoonFillIcon size="18" />
-                                ) : (
-                                    <MoonIcon size="18" />
-                                )}
-                            </ToggleSwitch>
-                        </Nav.Item> */}
-                        <Link href="/" className='nav-link px-2'>Dashboard</Link>
-                        <Link href="/profile" className='nav-link px-2'>Profile</Link>
-                        <Link href="/about" className='nav-link px-2'>About</Link>
-                        <Button variant="link" className='nav-link px-2 text-start' onClick={handleLogOut}>
-                            Logout
-                        </Button>
-                    </Nav>
-                </Offcanvas.Body>
-            </Navbar.Offcanvas>
-        </Container>
-    </Navbar>
+                <ArrowBarRightIcon size="28" />
+            </Button>
+        )}
+    </div>
   )
 }
 
