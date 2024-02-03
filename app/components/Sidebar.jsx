@@ -12,7 +12,6 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import {
-    ArrowBarLeft as ArrowBarLeftIcon,
     ArrowBarRight as ArrowBarRightIcon,
     Moon as MoonIcon,
     Sun as SunIcon,
@@ -41,7 +40,7 @@ const Sidebar = ({ isOpen, pathname, isDarkMode, toggleIsDarkMode, handleToggleS
                         placement="start"
                         onHide={handleToggleSidebar}
                     >
-                        <Offcanvas.Header className="d-block px-3 position-relative">
+                        <Offcanvas.Header className="d-block px-3 position-relative">    
                             <Button
                                 variant="link"
                                 onClick={handleToggleSidebar}
@@ -56,6 +55,16 @@ const Sidebar = ({ isOpen, pathname, isDarkMode, toggleIsDarkMode, handleToggleS
                                 activeKey={activeNavKey}
                                 className="flex-column justify-content-center flex-grow-1"
                             >
+                                <Nav.Item>
+                                    <ToggleSwitch isActive={isDarkMode} handleOnChange={toggleIsDarkMode}>
+                                        {isDarkMode ? (
+                                            <MoonIcon size="16" />
+                                        ) : (
+                                            <SunIcon size="16" />
+                                        )}
+                                    </ToggleSwitch>
+                                </Nav.Item>
+                                
                                 {navItems.map((labelText, index) => (
                                     <Nav.Item key={`nav-item-${labelText}`}>
                                         <Nav.Link
@@ -74,16 +83,6 @@ const Sidebar = ({ isOpen, pathname, isDarkMode, toggleIsDarkMode, handleToggleS
                                         Logout
                                     </Button>
                                 </Nav.Item>
-
-                                <Nav.Item>
-                                    <ToggleSwitch isActive={isDarkMode} handleOnChange={toggleIsDarkMode}>
-                                        {isDarkMode ? (
-                                            <MoonIcon size="16" />
-                                        ) : (
-                                            <SunIcon size="16" />
-                                        )}
-                                    </ToggleSwitch>
-                                </Nav.Item>
                             </Nav>
                         </Offcanvas.Body>
                     </Navbar.Offcanvas>
@@ -93,7 +92,7 @@ const Sidebar = ({ isOpen, pathname, isDarkMode, toggleIsDarkMode, handleToggleS
             <Button
                 variant="link"
                 onClick={handleToggleSidebar}
-                className="position-absolute start-100 rounded-0 p-0"
+                className="position-absolute start-100 rounded-0 p-0 bg-body-tertiary"
             >
                 <ArrowBarRightIcon size="28" />
             </Button>
