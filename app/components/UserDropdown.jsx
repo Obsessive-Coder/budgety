@@ -32,6 +32,7 @@ const UserDropdown = ({ handleLogOut }) => {
   return (
     <DropdownButton title={<UserImage />} className="bg-transparent user-dropdown">
       <Dropdown.ItemText>{displayName ?? email}</Dropdown.ItemText>
+
       <Dropdown.Divider />
 
       {dropdownItems.map(labelText => (
@@ -39,6 +40,8 @@ const UserDropdown = ({ handleLogOut }) => {
             {labelText}
         </Dropdown.Item>
       ))}
+
+      <Dropdown.Divider />
 
       <Dropdown.Item as="button" onClick={handleLogOut}>
         Logout
