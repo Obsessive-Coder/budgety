@@ -7,6 +7,7 @@ import * as formik from 'formik';
 import * as yup from 'yup';
 
 // Custom Imports.
+import { emailSchema, passwordSchema, passwordConfirmSchema } from '@/app/lib/constants/yup';
 import { UserAuth } from '@/app/lib/context/AuthContext';
 
 // React Bootstrap Components.
@@ -22,21 +23,10 @@ const AuthenticationForm = () => {
   const [isRegisterForm, setIsRegisterForm] = useState(false);
   const toggleIsRegisterForm = () => setIsRegisterForm(!isRegisterForm);
 
-  const passwordRegex = new RegExp('(?=[A-Za-z0-9@#$%^&+!=]+$)^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[@#$%^&+!=])(?=.{8,}).*$');
-  const passwordSchema = yup.string().required('password is a required field').min(8, 'Password must be at least 8 characters')
-    .matches(passwordRegex, {
-      excludeEmptyString: true,
-      message: 'Password must include 1 uppercase, 1 lowercase, and 1 special character.'
-    });
-
   const schema = yup.object().shape({
-    email: yup.string().required().email(),
+    email: emailSchema,
     password: passwordSchema,
-    ... (isRegisterForm ? {
-      passwordConfirm: yup.string()
-        .oneOf([yup.ref('password'), null], "Passwords do not match")
-        .required('Required'),
-    } : {}),
+    ...(isRegisterForm ? { passwordConfirm: passwordConfirmSchema } : {})
   });
 
 const handleEmailLogin = async (formData) => {

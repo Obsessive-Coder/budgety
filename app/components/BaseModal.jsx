@@ -31,7 +31,7 @@ const BaseModal = ({
 
   const handleOnConfirm = () => {
     handleConfirm();
-    // handleClose();
+    handleClose();
   };
 
   return (
