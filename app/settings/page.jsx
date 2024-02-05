@@ -19,6 +19,8 @@ const SettingsPage = () => {
           buttonLabel="Delete Account"
           buttonVariant="outline-danger"
           buttonClassName="mx-auto d-block my-5"
+          headerLabel="Confirm Account Deletion"
+          modalLabel="Are you sure you want to delete your account? This action cannot be undone."
           handleConfirm={deleteAccount}
         />
     </section>
