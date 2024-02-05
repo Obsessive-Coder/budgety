@@ -2,11 +2,12 @@
 
 import React from 'react';
 
-// Bootstrap Components.
-import Button from 'react-bootstrap/Button';
-
 // Custom Imports.
 import { UserAuth } from '@/app/lib/context/AuthContext';
+
+// Custom Components.
+import ConfirmModal from '@/app/components/BaseModal';
+import ConfirmPasswordModal from '@/app/components/ConfirmPasswordModal';
 
 const SettingsPage = () => {
   const { deleteAccount } = UserAuth();
@@ -15,9 +16,12 @@ const SettingsPage = () => {
     <section>
         <h1>SettingsPage</h1>
 
-        <Button variant="outline-danger" onClick={deleteAccount} className="mx-auto d-block my-5">
-          Delete Account
-        </Button>
+        <ConfirmPasswordModal
+          buttonLabel="Delete Account"
+          buttonVariant="outline-danger"
+          buttonClassName="mx-auto d-block my-5"
+          handleConfirm={deleteAccount}
+        />
     </section>
   )
 }
