@@ -12,7 +12,7 @@ import { Moon as MoonIcon, Sun as SunIcon } from 'react-bootstrap-icons';
 import ToggleSwitch from './ToggleSwitch';
 import UserDropdown from './UserDropdown';
 
-const Header = ({ isDarkMode, handleToggleIsDarkMode, handleLogOut }) => {
+const Header = ({ user, isDarkMode, handleToggleIsDarkMode, handleLogOut }) => {
   const ThemeIcon = isDarkMode ? MoonIcon : SunIcon;
 
   return (
@@ -20,13 +20,15 @@ const Header = ({ isDarkMode, handleToggleIsDarkMode, handleLogOut }) => {
       <Container>
         <Navbar.Brand href="/" as={Link}>Budgety</Navbar.Brand>
 
-        <div className="d-flex align-items-center">
-          <ToggleSwitch isActive={isDarkMode} handleOnChange={handleToggleIsDarkMode} className="mx-3">
-            <ThemeIcon size="16" className="mx-2" />
-          </ToggleSwitch>
+        {user && (
+          <div className="d-flex align-items-center">
+            <ToggleSwitch isActive={isDarkMode} handleOnChange={handleToggleIsDarkMode} className="mx-3">
+              <ThemeIcon size="16" className="mx-2" />
+            </ToggleSwitch>
 
-          <UserDropdown handleLogOut={handleLogOut} />
-        </div>
+            <UserDropdown handleLogOut={handleLogOut} />
+          </div>
+        )}
       </Container>
     </Navbar>
   )
