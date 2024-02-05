@@ -6,7 +6,6 @@ import React from 'react';
 import { UserAuth } from '@/app/lib/context/AuthContext';
 
 // Custom Components.
-import ConfirmModal from '@/app/components/BaseModal';
 import ConfirmPasswordModal from '@/app/components/ConfirmPasswordModal';
 
 const SettingsPage = () => {

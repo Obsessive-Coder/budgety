@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 
 // Form Validation.
 import * as formik from 'formik';
@@ -26,26 +26,41 @@ const ConfirmPasswordModal = (props) => {
   } = props;
 
   const { Formik } = formik;
-  const { user, loginWithEmailPassword } = UserAuth();
+  const { user, loginWithEmailPassword, logInWithGoogle } = UserAuth();
   const [userError, setUserError] = useState(undefined);
 
   const schema = yup.object().shape({ password: passwordSchema });
 
-  const handleOnConfirm = async ({ password }) => {
+  const handleEmailAuth = async password => {
     try {
-      const userCredential = await loginWithEmailPassword(user?.email?.trim(), password.trim());
-  
-      if (!userCredential?.user) {
-        setUserError('Unknown User. Please try again.');
-        throw new Error('Unknown User');
-      }
-  
-      setUserError(undefined);
-      handleConfirm();
-    } catch (error) {
-        console.error(error);
+      return await loginWithEmailPassword(user?.email?.trim(), password.trim());
+    } catch ({ code, message }) {
+      console.error(code, message);
     }
   };
+
+  const handleGoogleAuth = async () => {
+    try {
+      return await logInWithGoogle();
+    } catch ({ code, message }) {
+      console.log(code, message);
+    }
+  };
+
+  const handleOnConfirm = async (event) => {
+    event.preventDefault();
+
+    const isGoogleUser = user?.providerData.filter(({ providerId }) => providerId === 'google.com').length > 0;
+    const userCredential = isGoogleUser ? await handleGoogleAuth() : await handleEmailAuth(password);
+
+    if (!userCredential?.user) {
+      setUserError('Unknown User. Please try again.');
+      throw new Error('Unknown User');
+    }
+
+    setUserError(undefined);
+    handleConfirm();
+  };  
 
   const handleOnClose = () => setUserError(undefined);
 
@@ -56,26 +71,25 @@ const ConfirmPasswordModal = (props) => {
       buttonClassName={buttonClassName}
       confirmButtonType="submit"
       confirmButtonForm="confirm-password-form"
-      isConfirmButtonDisabled={false}
       headerLabel="Confirm Password"
       bodyLabel="Please confirm your password"
       modalSize="sm"
       handleCloseModal={handleOnClose}
     >
-      <Formik
+      {/* <Formik
         validationSchema={schema}
         onSubmit={handleOnConfirm}
         initialValues={{ password: '' }}
-      >
-        {({ handleSubmit, handleChange, values, touched, errors }) => (
-          <Form noValidate id="confirm-password-form" onSubmit={handleSubmit}>
+      > */}
+        {/* {({ handleSubmit, handleChange, values, touched, errors }) => ( */}
+          <Form noValidate id="confirm-password-form" onSubmit={handleOnConfirm}>
             {userError && (
               <Form.Control.Feedback type="invalid" className={userError ? 'd-block' : 'd-none'} style={{inlineSize: '265px', overflowWrap: 'break-word'}}>
                 {userError}
               </Form.Control.Feedback>
             )}
 
-            <Form.Group controlId="formPassword" className="my-3">
+            {/* <Form.Group controlId="formPassword" className="my-3">
               <FloatingLabel controlId="floatingPassword" label="Password">
                 <Form.Control
                   type="password"
@@ -90,10 +104,10 @@ const ConfirmPasswordModal = (props) => {
                   {errors.password}
                 </Form.Control.Feedback>
               </FloatingLabel>
-            </Form.Group>
+            </Form.Group> */}
           </Form>
-        )}
-      </Formik>
+        {/* )} */}
+      {/* </Formik> */}
     </BaseModal>
   )
 }
