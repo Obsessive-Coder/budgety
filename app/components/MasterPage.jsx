@@ -28,7 +28,7 @@ const MasterPage = ({ children, isDarkMode = false, toggleIsDarkMode }) => {
 
   return (
     <div>
-      <Header isDarkMode={isDarkMode} handleToggleIsDarkMode={toggleIsDarkMode} handleLogOut={handleLogOut} />
+      <Header user={user} isDarkMode={isDarkMode} handleToggleIsDarkMode={toggleIsDarkMode} handleLogOut={handleLogOut} />
 
       <main className="d-flex">
         {user && (

@@ -6,6 +6,7 @@ import {
     GoogleAuthProvider,
     createUserWithEmailAndPassword,
     signOut,
+    deleteUser,
     onAuthStateChanged as _onAuthStateChanged,
 } from 'firebase/auth';
 
@@ -75,5 +76,18 @@ export async function logOut() {
     } catch (error) {
         const { code, message } = error;
         console.error(code, message);
+    }
+};
+
+export async function deleteAccount () {
+    if (!auth?.currentUser) {
+        throw new Error('No user id was provided. Please try again.');
+    }
+
+    try {
+        await deleteUser(auth.currentUser);
+    } catch (error) {
+        const { code, message } = error;
+        console.error(code, message);        
     }
 };
