@@ -19,6 +19,7 @@ const AuthContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
     const [user, setUser] = useState(null);
+    const [userAlert, setUserAlert] = useState(null);
     const fullPathname = usePathname();
     const router = useRouter();
 
@@ -75,8 +76,8 @@ export const AuthContextProvider = ({ children }) => {
 
     return (
         <AuthContext.Provider value={{
-            user, logInWithGoogle, loginWithEmailPassword, registerWithEmailPassword, updateUserPassword,
-            logOut, deleteAccount, reauthenticateWithGoogle
+            user, userAlert, logInWithGoogle, loginWithEmailPassword, registerWithEmailPassword, updateUserPassword,
+            logOut, deleteAccount, reauthenticateWithGoogle, setUserAlert
         }}>
             {children}
         </AuthContext.Provider>
