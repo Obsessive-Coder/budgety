@@ -6,14 +6,17 @@ import React, { useState } from 'react';
 import * as formik from 'formik';
 import * as yup from 'yup';
 
-// Custom Imports.
-import { emailSchema, passwordSchema, passwordConfirmSchema } from '@/app/lib/constants/yup';
-import { UserAuth } from '@/app/lib/context/AuthContext';
+// Google Button Component.
+import GoogleButton from 'react-google-button';
 
 // React Bootstrap Components.
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
+
+// Custom Imports.
+import { emailSchema, passwordSchema, passwordConfirmSchema } from '@/app/lib/constants/yup';
+import { UserAuth } from '@/app/lib/context/AuthContext';
 
 const AuthenticationForm = () => {
   const { Formik } = formik;
@@ -163,9 +166,7 @@ const handleEmailRegistration = async (formData) => {
               </Button>
             </div>
 
-            <Button variant='link' onClick={handleGoogleLogin} className="d-block mx-auto mt-3">
-              Login With Google
-            </Button>
+            <GoogleButton onClick={handleGoogleLogin} className="my-5 w-100" />
           </Form>
         )}
       </Formik>
