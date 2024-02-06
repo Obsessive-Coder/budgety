@@ -17,3 +17,7 @@ export const passwordSchema = yup.string()
 export const passwordConfirmSchema = yup.string()
     .oneOf([yup.ref('password'), null], 'Passwords do not match')
     .required('Required')
+
+export const newPasswordConfirmSchema = yup.string()
+    .oneOf([yup.ref('newPassword'), null], 'Passwords do not match')
+    .required()

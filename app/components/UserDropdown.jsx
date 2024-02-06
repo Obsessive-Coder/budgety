@@ -11,7 +11,7 @@ import Image from 'react-bootstrap/Image';
 // Custom Imports.
 import { UserAuth } from '@/app/lib/context/AuthContext';
 
-const dropdownItems = ['profile', 'settings'];
+const dropdownItems = ['account'];
 const defaultProfileImage = 'https://placehold.co/32x32/png';
 
 const UserImage = () => {
