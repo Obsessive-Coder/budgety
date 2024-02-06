@@ -14,15 +14,15 @@ import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import BaseModal from './BaseModal';
 
 // Custom Imports.
-import { passwordSchema } from '@/app/lib/constants/yup';
+import { passwordSchema, passwordConfirmSchema } from '@/app/lib/constants/yup';
 import { UserAuth } from '@/app/lib/context/AuthContext';
 
 const ConfirmPasswordModal = (props) => {
   const {
     buttonLabel = 'Open Modal', 
     buttonVariant = 'outline-primary',
-    buttonClassName = 'mx-auto d-block my-5',
-    headerLabel = 'Confirm',
+    buttonClassName = '',
+    headerLabel = 'Delete Account',
     modalLabel = 'Are you sure?',
     handleConfirm = () => null
   } = props;

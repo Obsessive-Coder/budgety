@@ -8,6 +8,7 @@ import {
     reauthenticateWithPopup,
     signOut,
     deleteUser,
+    updatePassword as _updatePassword,
     onAuthStateChanged as _onAuthStateChanged,
 } from 'firebase/auth';
 
@@ -82,6 +83,18 @@ export async function registerEmailPassword(email, password) {
         return userCredential;
     } catch (error) {
         const { code, message } = error;
+        console.error(code, message);
+    }
+};
+
+export async function updatePassword (newPassword) {
+    if (!newPassword) {
+        throw new Error('Please provide a new password.');
+    }
+
+    try {
+        return _updatePassword(auth.currentUser, newPassword.trim());
+    } catch ({ code, message }) {
         console.error(code, message);
     }
 };

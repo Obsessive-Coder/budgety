@@ -10,6 +10,7 @@ import {
     registerEmailPassword,
     loginGoogle,
     reauthenticateGoogle,
+    updatePassword,
     logOut as _logOut,
     deleteAccount as _deleteAccount,
 } from '@/app/lib/firebase/auth';
@@ -35,6 +36,10 @@ export const AuthContextProvider = ({ children }) => {
 
     const reauthenticateWithGoogle = () => {
         return reauthenticateGoogle();
+    };
+
+    const updateUserPassword = newPassword => {
+        return updatePassword(newPassword);
     };
 
     const logOut = () => {
@@ -70,8 +75,8 @@ export const AuthContextProvider = ({ children }) => {
 
     return (
         <AuthContext.Provider value={{
-            user, logInWithGoogle, loginWithEmailPassword, registerWithEmailPassword, logOut, deleteAccount,
-            reauthenticateWithGoogle
+            user, logInWithGoogle, loginWithEmailPassword, registerWithEmailPassword, updateUserPassword,
+            logOut, deleteAccount, reauthenticateWithGoogle
         }}>
             {children}
         </AuthContext.Provider>

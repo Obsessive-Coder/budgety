@@ -30,7 +30,10 @@ const BaseModal = ({
   }
 
   const handleOnConfirm = () => {
-    handleConfirm();
+    if (confirmButtonForm) {
+      handleConfirm();
+    }
+
     handleClose();
   };
 
@@ -68,7 +71,7 @@ const BaseModal = ({
           <Button
             type={confirmButtonType}
             variant="outline-primary"
-            onClick={confirmButtonForm ? () => null : handleOnConfirm}
+            onClick={handleOnConfirm}
             form={confirmButtonForm}
           >
             {confirmLabel}
