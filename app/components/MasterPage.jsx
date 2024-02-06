@@ -1,18 +1,21 @@
 'use client'
 
-import React, { useState } from 'react'
-import { usePathname } from "next/navigation";
+import React, { use, useState } from 'react'
+import { usePathname } from 'next/navigation';
+
+// Custom Components.
+import Header from './Header';
+import Footer from './Footer';
+import Sidebar from './Sidebar'
+import UserAlert from './UserAlert';
 
 // Custom Imports.
 import { UserAuth } from '@/app/lib/context/AuthContext';
-import Header from '@/app/components/Header';
-import Footer from '@/app/components/Footer';
-import Sidebar from '@/app/components/Sidebar'
 
 const MasterPage = ({ children, isDarkMode = false, toggleIsDarkMode }) => {
-    const { user, logOut } = UserAuth();
-    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-    const pathname = usePathname();
+  const { user, userAlert, setUserAlert, logOut } = UserAuth();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const pathname = usePathname();
 
   const handleLogOut = async () => {
       try {
@@ -39,6 +42,10 @@ const MasterPage = ({ children, isDarkMode = false, toggleIsDarkMode }) => {
           {children}
         </section>
       </main>
+
+      {userAlert && (
+        <UserAlert userAlert={userAlert} setUserAlert={setUserAlert} />
+      )}
 
       <Footer />
     </div>
