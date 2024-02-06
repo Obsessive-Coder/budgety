@@ -1,6 +1,6 @@
 'use client'
 
-import { useContext, createContext, useState, useEffect, useId } from 'react';
+import { useContext, createContext, useState, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 
 // Custom Imports.
@@ -9,6 +9,7 @@ import {
     loginEmailPassword,
     registerEmailPassword,
     loginGoogle,
+    reauthenticateGoogle,
     logOut as _logOut,
     deleteAccount as _deleteAccount,
 } from '@/app/lib/firebase/auth';
@@ -28,8 +29,12 @@ export const AuthContextProvider = ({ children }) => {
         return registerEmailPassword(email.trim(), password.trim());
     };
 
-    const logInWithGoogle= () => {
+    const logInWithGoogle = () => {
         return loginGoogle();
+    };
+
+    const reauthenticateWithGoogle = () => {
+        return reauthenticateGoogle();
     };
 
     const logOut = () => {
@@ -66,6 +71,7 @@ export const AuthContextProvider = ({ children }) => {
     return (
         <AuthContext.Provider value={{
             user, logInWithGoogle, loginWithEmailPassword, registerWithEmailPassword, logOut, deleteAccount,
+            reauthenticateWithGoogle
         }}>
             {children}
         </AuthContext.Provider>

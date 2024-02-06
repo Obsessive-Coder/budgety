@@ -5,6 +5,7 @@ import {
     signInWithPopup,
     GoogleAuthProvider,
     createUserWithEmailAndPassword,
+    reauthenticateWithPopup,
     signOut,
     deleteUser,
     onAuthStateChanged as _onAuthStateChanged,
@@ -12,14 +13,29 @@ import {
 
 import { auth } from './firebase';
 
+const googleProvider = new GoogleAuthProvider();
+
 export function onAuthStateChanged(cb) {
     return _onAuthStateChanged(auth, cb);
 }
 
+export async function reauthenticateGoogle() {
+    try {
+        const userCredential = await reauthenticateWithPopup(auth.currentUser, googleProvider);
+
+        if (!userCredential?.user) {
+            throw new Error('Error logging in with Google. Please try again later.');
+        }
+
+        return userCredential;
+    } catch ({ code, message }) {
+        console.error(code, message);
+    }
+};
+
 export async function loginGoogle() {
     try {
-        const provider = new GoogleAuthProvider();
-        const userCredential = await signInWithPopup(auth, provider);
+        const userCredential = await signInWithPopup(auth, googleProvider);
 
         if (!userCredential?.user) {
             throw new Error('Error logging in with Google. Please try again later.');
