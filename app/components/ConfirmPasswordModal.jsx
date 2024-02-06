@@ -28,7 +28,7 @@ const ConfirmPasswordModal = (props) => {
   } = props;
 
   const { Formik } = formik;
-  const { user, loginWithEmailPassword, logInWithGoogle, reauthenticateWithGoogle } = UserAuth();
+  const { user, loginWithEmailPassword, reauthenticateWithGoogle } = UserAuth();
   const [userError, setUserError] = useState(undefined);
   const isGoogleUser = user?.providerData.filter(({ providerId }) => providerId === 'google.com').length > 0;
 
@@ -44,7 +44,6 @@ const ConfirmPasswordModal = (props) => {
 
   const handleGoogleAuth = async () => {
     try {
-      // return await logInWithGoogle();
       return await reauthenticateWithGoogle();
     } catch ({ code, message }) {
       console.log(code, message);
