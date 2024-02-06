@@ -6,6 +6,9 @@ import React, { useState } from 'react';
 import * as formik from 'formik';
 import * as yup from 'yup';
 
+// NextJS Components.
+import Link from 'next/link'
+
 // Google Button Component.
 import GoogleButton from 'react-google-button';
 
@@ -14,13 +17,16 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 
+// Custom Components.
+import ResetPasswordModal from './ResetPasswordModal';
+
 // Custom Imports.
 import { emailSchema, passwordSchema, passwordConfirmSchema } from '@/app/lib/constants/yup';
 import { UserAuth } from '@/app/lib/context/AuthContext';
 
 const AuthenticationForm = () => {
   const { Formik } = formik;
-  const { logInWithGoogle, loginWithEmailPassword, registerWithEmailPassword } = UserAuth();
+  const { logInWithGoogle, loginWithEmailPassword, registerWithEmailPassword, sendPasswordResetEmail } = UserAuth();
 
   const [userError, setUserError] = useState(undefined);
   const [isRegisterForm, setIsRegisterForm] = useState(false);
@@ -156,7 +162,7 @@ const handleEmailRegistration = async (formData) => {
               </Form.Group>
             )}
 
-            <div className="d-flex justify-content-between">
+            <div className="d-flex justify-content-between mb-2">
               <Button variant="outline-primary" type="submit">
                 {isRegisterForm ? 'Register' : 'Login'}
               </Button>
@@ -166,7 +172,11 @@ const handleEmailRegistration = async (formData) => {
               </Button>
             </div>
 
-            <GoogleButton onClick={handleGoogleLogin} className="my-5 w-100" />
+            {!isRegisterForm && (
+              <ResetPasswordModal buttonClassName="d-block mx-auto" />
+            )}
+
+            <GoogleButton onClick={handleGoogleLogin} className="my-3 w-100" />
           </Form>
         )}
       </Formik>

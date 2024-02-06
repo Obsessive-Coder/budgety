@@ -8,6 +8,7 @@ import {
     reauthenticateWithPopup,
     signOut,
     deleteUser,
+    sendPasswordResetEmail as _sendPasswordResetEmail,
     updatePassword as _updatePassword,
     onAuthStateChanged as _onAuthStateChanged,
 } from 'firebase/auth';
@@ -93,9 +94,21 @@ export async function updatePassword (newPassword) {
     }
 
     try {
-        return _updatePassword(auth.currentUser, newPassword.trim());
+        return await _updatePassword(auth.currentUser, newPassword.trim());
     } catch ({ code, message }) {
         console.error(code, message);
+    }
+};
+
+export async function sendPasswordResetEmail (email) {
+    if (!email) {
+        throw new Error('Please provide a valid email address.');
+    }
+
+    try {
+        await _sendPasswordResetEmail(auth, email.trim());
+    } catch ({code, message}) {
+        console.error(code, message);        
     }
 };
 
