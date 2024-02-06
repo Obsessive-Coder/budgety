@@ -28,7 +28,8 @@ const ResetPasswordModal = (props) => {
   } = props;
         
   const { Formik } = formik;
-  const { user, setUserAlert, sendPasswordResetEmail } = UserAuth();
+  const { setUserAlert, sendPasswordResetEmail } = UserAuth();
+  const [isOpen, setIsOpen] = useState(false);
   const [userError, setUserError] = useState(undefined);
 
   const schema = yup.object().shape({ email: emailSchema });
@@ -37,6 +38,7 @@ const ResetPasswordModal = (props) => {
     try {
         await sendPasswordResetEmail(email.trim());
         setUserError(undefined);
+        setIsOpen(false);
         setUserAlert({ variant: 'success', headingLabel: 'Reset Password', message: 'An email has been sent to the provided email address.'});
         setTimeout(() => setUserAlert(null), 5000);
     } catch ({ code, message }) {
@@ -55,6 +57,8 @@ const ResetPasswordModal = (props) => {
       confirmButtonForm="reset-password-form"
       headerLabel={headerLabel}
       bodyLabel="If your email address is associated with an account we will send you an email to reset your password."
+      isOpen={isOpen}
+      setIsOpen={setIsOpen}
       handleCloseModal={handleOnClose}
     >
         <Formik

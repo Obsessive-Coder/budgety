@@ -28,6 +28,7 @@ const ChangePasswordModal = (props) => {
   } = props;
 
   const { Formik } = formik;
+  const [isOpen, setIsOpen] = useState(false);
   const [userError, setUserError] = useState(undefined);
   const { user, loginWithEmailPassword } = UserAuth();
 
@@ -57,6 +58,7 @@ const ChangePasswordModal = (props) => {
 
     setUserError(undefined);
     handleConfirm(newPassword);
+    setIsOpen(false);
   };
 
   return (
@@ -68,6 +70,8 @@ const ChangePasswordModal = (props) => {
       confirmButtonForm="change-password-form"
       headerLabel={headerLabel}
       bodyLabel="Change your password"
+      isOpen={isOpen}
+      setIsOpen={setIsOpen}
       handleCloseModal={handleOnClose}
     >
         <Formik

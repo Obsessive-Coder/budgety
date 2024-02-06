@@ -29,6 +29,7 @@ const ConfirmPasswordModal = (props) => {
 
   const { Formik } = formik;
   const { user, loginWithEmailPassword, reauthenticateWithGoogle } = UserAuth();
+  const [isOpen, setIsOpen] = useState(false);
   const [userError, setUserError] = useState(undefined);
   const isGoogleUser = user?.providerData.filter(({ providerId }) => providerId === 'google.com').length > 0;
 
@@ -64,6 +65,7 @@ const ConfirmPasswordModal = (props) => {
 
     setUserError(undefined);
     handleConfirm();
+    setIsOpen(false);
   };  
 
   const handleOnClose = () => setUserError(undefined);
@@ -77,6 +79,8 @@ const ConfirmPasswordModal = (props) => {
       confirmButtonForm="confirm-password-form"
       headerLabel={headerLabel}
       bodyLabel="Please confirm your password"
+      isOpen={isOpen}
+      setIsOpen={setIsOpen}
       handleCloseModal={handleOnClose}
     >
       {isGoogleUser ? (
