@@ -7,9 +7,9 @@ const UserAlert = ({ userAlert: { variant = 'primary', headingLabel = 'Alert', m
   const handleOnClose = () => setUserAlert(null);
 
   return (
-    <Alert variant={variant} onClose={handleOnClose} dismissible>
+    <Alert dismissible variant={variant} onClose={handleOnClose} className="w-50 p-2 mx-auto">
         <Alert.Heading>{headingLabel}</Alert.Heading>
-        <p>
+        <p className="m-0">
             {message}
         </p>
     </Alert>

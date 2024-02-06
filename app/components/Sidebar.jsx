@@ -27,7 +27,7 @@ const Sidebar = ({ isOpen, pathname, handleToggleSidebar }) => {
   return (
     <div className="position-relative">
         {isOpen ? (
-            <Navbar expand={isOpen} className={`bg-body-tertiary align-items-start ${isSmallScreen ? '' : 'position-absolute'}`}>
+            <Navbar expand={isOpen} className={`bg-body-tertiary align-items-start h-100 ${isSmallScreen ? '' : 'position-absolute'}`}>
                 <Container fluid className="flex-column">
                     <Navbar.Offcanvas
                         id="offcanvasNavbar-expand"
@@ -48,7 +48,7 @@ const Sidebar = ({ isOpen, pathname, handleToggleSidebar }) => {
                         <Offcanvas.Body className="px-3">
                             <Nav 
                                 activeKey={activeNavKey}
-                                className="flex-column justify-content-center flex-grow-1"
+                                className="flex-column justify-content-start"
                             >                                
                                 {navItems.map((labelText, index) => (
                                     <Nav.Item key={`nav-item-${labelText}`}>

@@ -47,7 +47,7 @@ const ChangePasswordModal = (props) => {
 
   const handleOnClose = () => setUserError(undefined);
 
-  const handleOnConfirm = async ({ currentPassword, newPassword, newPasswordConfirm }) => {
+  const handleOnConfirm = async ({ currentPassword, newPassword }) => {
     const userCredential = await handleEmailAuth(currentPassword);
 
     if (!userCredential?.user) {

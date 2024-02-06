@@ -33,19 +33,21 @@ const MasterPage = ({ children, isDarkMode = false, toggleIsDarkMode }) => {
     <div>
       <Header user={user} isDarkMode={isDarkMode} handleToggleIsDarkMode={toggleIsDarkMode} handleLogOut={handleLogOut} />
 
-      <main className="d-flex">
+      <div className="d-flex">
         {user && (
           <Sidebar isOpen={isSidebarOpen} pathname={pathname} handleToggleSidebar={toggleSidebarIsOpen} />
         )}
 
-        <section className="d-flex justify-content-center flex-fill p-5">
-          {children}
-        </section>
-      </main>
+        <main className="flex-fill">
+          <section className="d-flex justify-content-center flex-fill p-5">
+            {children}
+          </section>
 
-      {userAlert && (
-        <UserAlert userAlert={userAlert} setUserAlert={setUserAlert} />
-      )}
+          {userAlert && (
+            <UserAlert userAlert={userAlert} setUserAlert={setUserAlert} />
+          )}
+        </main>
+      </div>
 
       <Footer />
     </div>

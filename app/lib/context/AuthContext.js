@@ -19,7 +19,7 @@ const AuthContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
     const [user, setUser] = useState(null);
-    const [userAlert, setUserAlert] = useState({headingLabel: 'Testing', bodyLabel: 'Testing Testing', variant: 'danger'});
+    const [userAlert, setUserAlert] = useState(null);
     const fullPathname = usePathname();
     const router = useRouter();
 
