@@ -14,7 +14,7 @@ import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import BaseModal from './BaseModal';
 
 // Custom Imports.
-import { passwordSchema, passwordConfirmSchema } from '@/app/lib/constants/yup';
+import { passwordSchema } from '@/app/lib/constants/yup';
 import { UserAuth } from '@/app/lib/context/AuthContext';
 
 const ConfirmPasswordModal = (props) => {
