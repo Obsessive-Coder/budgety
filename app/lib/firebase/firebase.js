@@ -1,5 +1,6 @@
 import { initializeApp, getApps } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
 
 // Custom Imports.
 import firebaseConfig from './config';
@@ -9,6 +10,4 @@ export const firebaseApp =
 
 export const auth = getAuth(firebaseApp);
 
-export async function getAuthenticatedAppForUser(session = null) {
-    console.log("client: ", app);
-}
+export const db = getFirestore(firebaseApp);
