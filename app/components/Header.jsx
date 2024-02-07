@@ -12,7 +12,7 @@ import { Moon as MoonIcon, Sun as SunIcon } from 'react-bootstrap-icons';
 import ToggleSwitch from './ToggleSwitch';
 import UserDropdown from './UserDropdown';
 
-const Header = ({ user, isDarkMode, handleToggleIsDarkMode, handleLogOut }) => {
+const Header = ({ user, isDarkMode, handleToggleTheme, handleLogOut }) => {
   const ThemeIcon = isDarkMode ? MoonIcon : SunIcon;
 
   return (
@@ -22,7 +22,7 @@ const Header = ({ user, isDarkMode, handleToggleIsDarkMode, handleLogOut }) => {
 
         {user && (
           <div className="d-flex align-items-center">
-            <ToggleSwitch isActive={isDarkMode} handleOnChange={handleToggleIsDarkMode} className="mx-3">
+            <ToggleSwitch isActive={isDarkMode} handleOnChange={handleToggleTheme} className="mx-3">
               <ThemeIcon size="16" className="mx-2" />
             </ToggleSwitch>
 

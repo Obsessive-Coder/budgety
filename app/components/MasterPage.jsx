@@ -11,11 +11,14 @@ import UserAlert from './UserAlert';
 
 // Custom Imports.
 import { UserAuth } from '@/app/lib/context/AuthContext';
+import { UserTheme } from '@/app/lib/context/ThemeContext';
 
-const MasterPage = ({ children, isDarkMode = false, toggleIsDarkMode }) => {
+const MasterPage = ({ children }) => {
+  const { theme, toggleTheme } = UserTheme();
   const { user, userAlert, setUserAlert, logOut } = UserAuth();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const pathname = usePathname();
+  const isDarkMode = theme === 'dark';
 
   const handleLogOut = async () => {
       try {
@@ -31,7 +34,7 @@ const MasterPage = ({ children, isDarkMode = false, toggleIsDarkMode }) => {
 
   return (
     <div>
-      <Header user={user} isDarkMode={isDarkMode} handleToggleIsDarkMode={toggleIsDarkMode} handleLogOut={handleLogOut} />
+      <Header user={user} isDarkMode={isDarkMode} handleToggleTheme={toggleTheme} handleLogOut={handleLogOut} />
 
       <div className="d-flex">
         {user && (
