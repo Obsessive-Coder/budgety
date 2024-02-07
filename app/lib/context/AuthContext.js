@@ -18,7 +18,7 @@ import {
 
 const AuthContext = createContext();
 
-export const AuthContextProvider = ({ children }) => {
+export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [userAlert, setUserAlert] = useState(null);
     const fullPathname = usePathname();
