@@ -16,7 +16,7 @@ import {
     X as XIcon
 } from 'react-bootstrap-icons';
 
-const navItems = ['dashboard', 'about'];
+const navItems = ['dashboard', 'income', 'transactions', 'debt', 'saving'];
 
 const Sidebar = ({ isOpen, pathname, handleToggleSidebar }) => {
   const pathnameIndex = navItems.indexOf(pathname.split('/')[1]);
