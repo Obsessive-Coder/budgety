@@ -80,7 +80,7 @@ const handleEmailRegistration = async (formData) => {
       }
 
       setUserError(undefined);
-    } catch (error) {
+    } catch ({ code, message }) {
       console.error(error);
     }
   };

@@ -43,6 +43,7 @@ const ResetPasswordModal = (props) => {
         setTimeout(() => setUserAlert(null), 5000);
     } catch ({ code, message }) {
         console.error(code, message);
+        setUserAlert({ variant: 'warning', headingLabel: 'Reset Password', message});
     }
   };
 

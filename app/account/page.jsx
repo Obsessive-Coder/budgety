@@ -14,17 +14,24 @@ const AccountPage = () => {
   const isGoogleUser = user?.providerData.filter(({ providerId }) => providerId === 'google.com').length > 0;
 
   const handleConfirmPasswordChange = async password => {
-    await updateUserPassword(password)
-    
-    setUserAlert({ variant: 'success', headingLabel: 'Change Password', message: 'Password successfully changed.'});
-    setTimeout(() => setUserAlert(null), 5000);
+    try {
+      await updateUserPassword(password);
+      setUserAlert({ variant: 'success', headingLabel: 'Change Password', message: 'Password successfully changed.'});
+      setTimeout(() => setUserAlert(null), 5000);
+    } catch ({ code, message }) {
+      console.log(code, message);
+      setUserAlert({ variant: 'warning', headingLabel: 'Change Password', message});
+    }  
   };
 
   const handleConfirmDeleteAccount = async () => {
-    await deleteAccount();
-
-    setUserAlert({ variant: 'success', headingLabel: 'Delete Account', message: 'Account successfully deleted.'});
-    setTimeout(() => setUserAlert(null), 5000);
+    try {
+      await deleteAccount();
+      setUserAlert({ variant: 'success', headingLabel: 'Delete Account', message: 'Account successfully deleted.'});
+      setTimeout(() => setUserAlert(null), 5000);
+    } catch ({ code, message }) {
+      console.log(code, message);setUserAlert({ variant: 'warning', headingLabel: 'Change Password', message});
+    }
   };
 
   return (
