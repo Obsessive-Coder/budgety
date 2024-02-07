@@ -43,7 +43,7 @@ const AccountPage = () => {
                 buttonLabel="Delete Account"
                 buttonVariant="outline-danger"
                 buttonClassName="d-block my-2"
-                headerLabel="Confirm Account Deletion"
+                headerLabel="Delete Account"
                 modalLabel="Are you sure you want to delete your account? This action cannot be undone."
                 handleConfirm={handleConfirmDeleteAccount}
             />

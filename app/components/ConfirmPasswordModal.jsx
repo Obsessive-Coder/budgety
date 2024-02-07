@@ -19,7 +19,7 @@ import { UserAuth } from '@/app/lib/context/AuthContext';
 
 const ConfirmPasswordModal = (props) => {
   const {
-    buttonLabel = 'Open Modal', 
+    buttonLabel = 'Delete Account', 
     buttonVariant = 'outline-primary',
     buttonClassName = '',
     headerLabel = 'Delete Account',
@@ -106,6 +106,8 @@ const ConfirmPasswordModal = (props) => {
                 {userError}
               </Form.Control.Feedback>
             )}
+            
+            <Form.Label>{modalLabel}</Form.Label>
 
             <Form.Group controlId="formPassword" className="my-3">
               <FloatingLabel controlId="floatingPassword" label="Password">
