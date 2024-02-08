@@ -7,11 +7,13 @@ import Button from 'react-bootstrap/Button';
 // Custom Components.
 import BaseTable from '../components/BaseTable';
 
-// Custom Imponts.
+// Custom Imports.
+import { UserAuth } from '@/app/lib/context/AuthContext';
 import { addDocument, getDocuments } from '@/app/lib/firebase/firestore';
 import { transactionsColumnLabels } from '@/app/lib/constants/transactions';
 
 const TransactionsPage = () => {
+  const { user } = UserAuth();
   const [transactions, setTransactions] = useState([]);
 
   const handleIt = async () => {
@@ -41,7 +43,8 @@ const TransactionsPage = () => {
   useEffect(() => {
     const fetchTransactions = async () => {
         try {
-          const transactions = await getDocuments('transactions');
+          console.log('HERE: ', user)
+          const transactions = await getDocuments('transactions', user.uid);
           setTransactions(transactions);
         } catch ({ code, error }) {
           console.log(code, error);
@@ -49,7 +52,7 @@ const TransactionsPage = () => {
     };
 
     fetchTransactions();
-  }, [transactions.length])
+  }, [transactions.length, user])
 
   return (
     <section className="flex-fill">

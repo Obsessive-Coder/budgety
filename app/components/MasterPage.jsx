@@ -29,7 +29,7 @@ const MasterPage = ({ children }) => {
   };
 
   const toggleSidebarIsOpen = () => {
-    setIsSidebarOpen(!isSidebarOpen);
+    setIsSidebarOpen(!isSidebarOpen); 
   }
 
   return (
