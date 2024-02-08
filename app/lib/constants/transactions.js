@@ -1,0 +1,1 @@
+export const transactionsColumnLabels = ['amount', 'categoryId', 'accountId', 'date', 'notesId'];

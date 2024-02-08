@@ -5,13 +5,8 @@ import { collection, doc, addDoc, getDocs, deleteDoc, updateDoc } from 'firebase
 
 export async function getDocuments(collectionName) {
     try {
-        const documents = await getDocs(collection(db, collectionName));
-
-        if (!documents) {
-            throw new Error('Error retrieving the documents. Please try again later');
-        }
-
-        return documents;
+        const documentsSnapshot = await getDocs(collection(db, collectionName));
+        return documentsSnapshot.docs.map((document) => ({id: document.id, ...document.data()}));
     } catch ({ code, message }) {
         console.error(code, message);
     }
