@@ -2,29 +2,23 @@
 
 import React from 'react';
 
-import Button from 'react-bootstrap/Button';
-
-import { addDocument } from '@/app/lib/firebase/firestore';
-
 const TransactionsPage = () => {
-  const handleIt = async () => {
+  // const handleIt = async () => {
     // const x = addDocument('transactions', {
-    //   name: 'Netflix',
-    //   categoryId: '1',
+    //   typeId: '0',
+    //   categoryId: '0', 
+    //   accountId: '0',
+    //   noteId: '0',
     //   amount: 15.72,
-    //   dueDate: '',
-    //   paidDate: '',
-    //   isRecurring: false,
-    //   isPaid: false,
-
+    //   date: '',
+    //   time: '',
+    //   isRefund: false,
     // })
-  };
+  // };
 
   return (
     <div>
       <h1>Transactions Page</h1>
-
-      <Button onClick={handleIt}>Add Transaction</Button>
     </div>
   )
 }
