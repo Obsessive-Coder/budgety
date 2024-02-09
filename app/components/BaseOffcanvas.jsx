@@ -6,7 +6,7 @@ import Offcanvas from 'react-bootstrap/Offcanvas';
 
 import React from 'react'
 
-const BaseOffcanvas = ({ children, bodyLabel, buttonProps = {}, headerProps = {}, ...props}) => {
+const BaseOffcanvas = ({ children, buttonProps = {}, headerProps = {}, ...props}) => {
   const {
     label: buttonLabel = 'Open Offcanvas',
     variant = 'primary',
@@ -32,8 +32,6 @@ const BaseOffcanvas = ({ children, bodyLabel, buttonProps = {}, headerProps = {}
         </Offcanvas.Header>
 
         <Offcanvas.Body className="text-center">
-          {/* <label className="text-center">{bodyLabel}</label> */}
-
           {children}
         </Offcanvas.Body>
       </Offcanvas>
