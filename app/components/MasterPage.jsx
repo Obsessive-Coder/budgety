@@ -42,7 +42,7 @@ const MasterPage = ({ children }) => {
         )}
 
         <main className="flex-fill">
-          <section className="d-flex justify-content-center flex-fill p-5">
+          <section className="d-flex justify-content-center flex-fill p-3">
             {children}
           </section>
 

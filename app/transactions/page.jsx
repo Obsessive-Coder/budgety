@@ -6,11 +6,13 @@ import Button from 'react-bootstrap/Button';
 
 // Custom Components.
 import BaseTable from '../components/BaseTable';
+import TableSidebar from '../components/TableSidebar';
 
 // Custom Imports.
 import { UserAuth } from '@/app/lib/context/AuthContext';
 import { addDocument, getDocuments } from '@/app/lib/firebase/firestore';
 import { transactionsColumnLabels } from '@/app/lib/constants/transactions';
+import { seedTransactions } from '@/data/transactionsSeeder';
 
 const TransactionsPage = () => {
   const { user } = UserAuth();
@@ -43,7 +45,6 @@ const TransactionsPage = () => {
   useEffect(() => {
     const fetchTransactions = async () => {
         try {
-          console.log('HERE: ', user)
           const transactions = await getDocuments('transactions', user.uid);
           setTransactions(transactions);
         } catch ({ code, error }) {
@@ -58,9 +59,13 @@ const TransactionsPage = () => {
     <section className="flex-fill">
       <h1>Transactions Page</h1>
 
-      {/* <Button onClick={handleIt}>Add</Button> */}
+      {/* <Button onClick={() => seedTransactions(user.uid)}>Click It</Button> */}
 
-      <BaseTable headLabels={transactionsColumnLabels} items={transactions} />
+      <section className="d-flex">
+        <BaseTable items={transactions} headLabels={transactionsColumnLabels} tableClassName="flex-fill" />
+
+        <TableSidebar />
+      </section>
     </section>
   )
 }
