@@ -1,17 +1,14 @@
 'use client'
 
 import { db } from './firebase';
-import { collection, doc, addDoc, getDocs, deleteDoc, updateDoc } from 'firebase/firestore';
+import { collection, doc, addDoc, getDocs, deleteDoc, updateDoc, query, where } from 'firebase/firestore';
 
-export async function getDocuments(collectionName) {
+export async function getDocuments(collectionName, userId) {
     try {
-        const documents = await getDocs(collection(db, collectionName));
-
-        if (!documents) {
-            throw new Error('Error retrieving the documents. Please try again later');
-        }
-
-        return documents;
+        const documentRef = collection(db, collectionName);
+        const q = query(documentRef, where('userId', '==', userId));
+        const querySnapshot = await getDocs(q);
+        return querySnapshot.docs.map((document) => ({id: document.id, ...document.data()}));
     } catch ({ code, message }) {
         console.error(code, message);
     }
