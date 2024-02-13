@@ -21,3 +21,13 @@ export const passwordConfirmSchema = yup.string()
 export const newPasswordConfirmSchema = yup.string()
     .oneOf([yup.ref('newPassword'), null], 'Passwords do not match')
     .required()
+
+export const transactionSchema = yup.object().shape({
+    typeId: yup.string().required('* Required Field').notOneOf(['-- select one --'], '* Required Field'),
+    categoryId: yup.string().required('* Required Field').notOneOf(['-- select one --'], '* Required Field'),
+    amount: yup.number().required('* Required Field'),
+    accountId: yup.string().required('* Required Field').notOneOf(['-- select one --'], '* Required Field'),
+    date: yup.date().required('* Required Field'),
+    time: yup.string().required('* Required Field'),
+    note: yup.string()
+});

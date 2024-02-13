@@ -1,9 +1,20 @@
 'use client'
 
 import { db } from './firebase';
-import { collection, doc, addDoc, getDocs, deleteDoc, updateDoc, query, where } from 'firebase/firestore';
+import { collection, doc, addDoc, getDocs, getDoc, deleteDoc, updateDoc, query, where } from 'firebase/firestore';
 
-export async function getDocuments(collectionName, userId) {
+export async function getDocuments(collectionName) {
+    try {
+        const documentRef = collection(db, collectionName);
+        const  q = query(documentRef);
+        const querySnapshot = await getDocs(q);
+        return querySnapshot.docs.map((document) => ({id: document.id, ...document.data()}));
+    } catch ({ code, message }) {
+        console.error(code, message);
+    }
+}
+
+export async function getDocsByUserId(collectionName, userId) {
     try {
         const documentRef = collection(db, collectionName);
         const q = query(documentRef, where('userId', '==', userId));

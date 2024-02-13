@@ -1,46 +1,35 @@
 'use client'
 
-import React, { useState } from "react";
+import React from "react";
 
 // Form Validation.
 import * as formik from 'formik';
-import * as yup from 'yup';
 
 // React Bootstrap Components.
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 
-const AddTransactionForm = () => {
-    const { Formik } = formik;
-    const [startDate, setStartDate] = useState(new Date());
+// Custom Imports.
+import { UserTransactions } from '@/app/lib/context/TransactionsContext';
+import { transactionSchema } from '@/app/lib/constants/yup';
 
-    const schema = yup.object().shape({
-        typeId: yup.string().required('* Required Field'),
-        categoryId: yup.string().required('* Required Field'),
-        amount: yup.number().required('* Required Field'),
-        accountId: yup.string().required('* Required Field'),
-        date: yup.date().required('* Required Field'),
-        time: yup.string().required('* Required Field'),
-        noteId: yup.string().required('* Required Field')
-    });
-
-    const handleAddTransaction = (formData) => {
-        console.log(formData);
-    };
+const AddTransactionForm = ({ handleAddTransaction }) => {
+  const { transactionTypes, transactionCategories, accountTypes } = UserTransactions();
+  const { Formik } = formik;
 
   return (
     <Formik
-        validationSchema={schema}
+        validationSchema={transactionSchema}
         onSubmit={handleAddTransaction}
         initialValues={{ 
-            typeId: '', 
-            categoryId: '', 
-            amount: '',
-            accountId: '',
-            date: '',
-            time: '',
-            noteId: ''
+            typeId: undefined, 
+            categoryId: undefined, 
+            amount: undefined,
+            accountId:undefined,
+            date: undefined,
+            time: undefined,
+            note: undefined
         }}
       >
         {({ handleSubmit, handleChange, values, touched, errors }) => (
@@ -54,12 +43,16 @@ const AddTransactionForm = () => {
                                 aria-label="Select transaction type"
                                 value={values.typeId}
                                 onChange={handleChange}
-                                isInvalid={!!errors.typeId} 
+                                isInvalid={!!errors.typeId}
+                                className="text-capitalize"
                             >
-                                <option>Open this select menu</option>
-                                <option value="1">One</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option>
+                                <option value={null}>-- select one --</option>
+
+                                {transactionTypes.map(({ id, definition }) => (
+                                    <option key={`transaction-type-${id}`} value={id}>
+                                        {definition}
+                                    </option>
+                                ))}
                             </Form.Select>
 
                             <Form.Control.Feedback type="invalid" style={{ overflowWrap: 'break-word' }} className="text-start">
@@ -77,11 +70,15 @@ const AddTransactionForm = () => {
                                 value={values.categoryId}
                                 onChange={handleChange}
                                 isInvalid={!!errors.categoryId}
+                                className="text-capitalize"
                             >
-                                <option>Open this select menu</option>
-                                <option value="1">One</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option>
+                                <option value={undefined}>-- select one --</option>
+
+                                {transactionCategories.map(({ id, definition }) => (
+                                    <option key={`transaction-categories-${id}`} value={id}>
+                                        {definition}
+                                    </option>
+                                ))}
                             </Form.Select>
 
                             <Form.Control.Feedback type="invalid" style={{ overflowWrap: 'break-word' }} className="text-start">
@@ -119,11 +116,15 @@ const AddTransactionForm = () => {
                                 value={values.accountId}
                                 onChange={handleChange}
                                 isInvalid={!!errors.accountId}
+                                className="text-capitalize"
                             >
-                                <option>Open this select menu</option>
-                                <option value="1">One</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option>
+                                <option value={undefined}>-- select one --</option>
+
+                                {accountTypes.map(({ id, definition }) => (
+                                    <option key={`account-types-${id}`} value={id}>
+                                        {definition}
+                                    </option>
+                                ))}
                             </Form.Select>
 
                             <Form.Control.Feedback type="invalid" style={{ overflowWrap: 'break-word' }} className="text-start">
@@ -176,17 +177,17 @@ const AddTransactionForm = () => {
                         <FloatingLabel controlId="floatingNote" label="Note">
                             <Form.Control 
                                 as="textarea"
-                                name="noteId"
+                                name="note"
                                 size="sm"
                                 placeholder="Add a note"
                                 style={{ height: 150 }}
-                                value={values.noteId}
+                                value={values.note}
                                 onChange={handleChange}
-                                isInvalid={!!errors.noteId}
+                                isInvalid={!!errors.note}
                             />
 
                             <Form.Control.Feedback type="invalid" style={{ overflowWrap: 'break-word' }} className="text-start">
-                                {errors.noteId}
+                                {errors.note}
                             </Form.Control.Feedback>
                         </FloatingLabel>
                     </Form.Group>
