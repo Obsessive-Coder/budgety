@@ -61,6 +61,7 @@ const AddTransactionForm = ({ handleAddTransaction, handleCloseSidebar }) => {
         validationSchema={transactionSchema}
         onSubmit={handleAddTransaction}
         initialValues={initialValues}
+        validateOnChange={false}
       >
         {({ handleSubmit, handleChange, values, touched, errors }) => (
             <Form noValidate onSubmit={handleSubmit}>
