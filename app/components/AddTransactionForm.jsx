@@ -25,26 +25,28 @@ const Option = ({ labelText, ...props }) => {
 };
 
 const FormGroup = ({ labelText, controlType, controlProps, errorText, items = [] }) => {
+    const spacelessLabelText = removeWhitespace(labelText);
+
     return (
-        <Form.Group controlId={`form${removeWhitespace(labelText)}`}  className="m-2 flex-basis-100">
-            <FloatingLabel controlId={`floating${removeWhitespace(labelText)}`} label={labelText} className="text-capitalize">
+        <Form.Group controlId={`form${spacelessLabelText}`}  className="m-2 flex-basis-100">
+            <FloatingLabel controlId={`floating${spacelessLabelText}`} label={labelText} className="text-capitalize">
                 {controlType === 'select' && (
                     <Form.Select size="sm" className="text-capitalize" {...controlProps}>
                         <option value={null}>-- select one --</option>
 
                         {items.map(({ id, definition, items = [] }) => (
                             controlProps.name === 'categoryId' ? (
-                                <optgroup key={`group-${removeWhitespace(labelText)}-${id}`} label={definition}>
+                                <optgroup key={`group-${spacelessLabelText}-${id}`} label={definition}>
                                     {items.map(({ id, definition }) => (
                                         <Option
-                                            key={`option-${removeWhitespace(labelText)}-${id}`} 
+                                            key={`option-${spacelessLabelText}-${id}`} 
                                             labelText={definition}
                                             value={id}
                                         />
                                     ))}
                                 </optgroup>
                             ) : (
-                                <Option key={`option-${removeWhitespace(labelText)}-${id}`} labelText={definition} value={id} />
+                                <Option key={`option-${spacelessLabelText}-${id}`} labelText={definition} value={id} />
                             )
                         ))}
                     </Form.Select>
