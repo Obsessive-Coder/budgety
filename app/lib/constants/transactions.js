@@ -1,4 +1,4 @@
-export const transactionsColumnLabels = ['amount', 'categoryId', 'accountId', 'date', 'notesId'];
+export const transactionsColumnLabels = ['amount', 'categoryId', 'accountId', 'date', 'note'];
 
 export const formGroups = [[{
     labelText: 'transaction type',

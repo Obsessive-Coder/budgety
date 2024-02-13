@@ -15,7 +15,7 @@ import { addDocument } from '@/app/lib/firebase/firestore';
 import { transactionsColumnLabels } from '@/app/lib/constants/transactions';
 import { seedTransactions } from '@/data/transactionsSeeder';
 
-const AddTransactionTable = () => {
+const TransactionTable = () => {
   const { transactions } = UserTransactions();
 
   return (
@@ -64,7 +64,7 @@ const TransactionsPage = () => {
 
       <section className="d-flex">
         <TransactionsProvider>
-          <AddTransactionTable />
+          <TransactionTable />
 
           <TableSidebar userId={user.uid} />
         </TransactionsProvider>
