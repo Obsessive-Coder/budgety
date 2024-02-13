@@ -20,12 +20,19 @@ export const TransactionsProvider = ({ children }) => {
             try {
               const transactions = await getDocsByUserId('transactions', user.uid);
               const transactionTypes = await getDocuments('transactionTypes');
-              const transactionCategories = await getDocuments('transactionCategories');
               const accountTypes = await getDocuments('accountTypes');
+              const transactionCategories = await getDocuments('transactionCategories');
+
+              const parentCategories = transactionCategories.filter(({ parentCategoryId }) => !parentCategoryId);
+
+              const groupedCategories = parentCategories.map(category => ({
+                ...category,
+                items: transactionCategories.filter(({ parentCategoryId }) => parentCategoryId === category.id)
+              }));
 
               setTransactions(transactions);
               setTransactionTypes(transactionTypes);
-              setTransactionCategories(transactionCategories);
+              setTransactionCategories(groupedCategories);
               setAccountTypes(accountTypes)
             } catch (e) {
               console.log(e);

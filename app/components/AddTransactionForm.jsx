@@ -14,10 +14,17 @@ import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import { UserTransactions } from '@/app/lib/context/TransactionsContext';
 import { transactionSchema } from '@/app/lib/constants/yup';
 import { formGroups } from '@/app/lib/constants/transactions';
+import { removeWhitespace } from '@/app/lib/helpers/global';
+
+const Option = ({ labelText, ...props }) => {
+    return (
+        <option {...props}>
+            {labelText}
+        </option>
+    );
+};
 
 const FormGroup = ({ labelText, controlType, controlProps, errorText, items = [] }) => {
-    const removeWhitespace = value => value.replace(' ', '');
-
     return (
         <Form.Group controlId={`form${removeWhitespace(labelText)}`}  className="m-2 flex-basis-100">
             <FloatingLabel controlId={`floating${removeWhitespace(labelText)}`} label={labelText} className="text-capitalize">
@@ -25,10 +32,20 @@ const FormGroup = ({ labelText, controlType, controlProps, errorText, items = []
                     <Form.Select size="sm" className="text-capitalize" {...controlProps}>
                         <option value={null}>-- select one --</option>
 
-                        {items.map(({ id, definition }) => (
-                            <option key={`${removeWhitespace(labelText)}-${id}`} value={id}>
-                                {definition}
-                            </option>
+                        {items.map(({ id, definition, items = [] }) => (
+                            controlProps.name === 'categoryId' ? (
+                                <optgroup key={`group-${removeWhitespace(labelText)}-${id}`} label={definition}>
+                                    {items.map(({ id, definition }) => (
+                                        <Option
+                                            key={`option-${removeWhitespace(labelText)}-${id}`} 
+                                            labelText={definition}
+                                            value={id}
+                                        />
+                                    ))}
+                                </optgroup>
+                            ) : (
+                                <Option key={`option-${removeWhitespace(labelText)}-${id}`} labelText={definition} value={id} />
+                            )
                         ))}
                     </Form.Select>
                 )}
