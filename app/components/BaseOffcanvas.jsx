@@ -1,12 +1,10 @@
 'use client'
 
-import { useState } from 'react';
+import React from 'react';
 import Button from 'react-bootstrap/Button';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 
-import React from 'react'
-
-const BaseOffcanvas = ({ children, buttonProps = {}, headerProps = {}, ...props}) => {
+const BaseOffcanvas = ({ children, isOpen, buttonProps = {}, headerProps = {}, handleClose, handleOpen, ...props}) => {
   const {
     label: buttonLabel = 'Open Offcanvas',
     variant = 'primary',
@@ -14,11 +12,6 @@ const BaseOffcanvas = ({ children, buttonProps = {}, headerProps = {}, ...props}
   } = buttonProps;
 
   const { label: titleLabel = 'Base Offcanvas' } = headerProps;
-
-  const [isOpen, setIsOpen] = useState(false);
-
-  const handleOpen = () => setIsOpen(true);
-  const handleClose = () => setIsOpen(false);
 
   return (
     <>

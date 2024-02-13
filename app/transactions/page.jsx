@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 import Button from 'react-bootstrap/Button';
 
@@ -10,13 +10,25 @@ import TableSidebar from '../components/TableSidebar';
 
 // Custom Imports.
 import { UserAuth } from '@/app/lib/context/AuthContext';
-import { addDocument, getDocuments } from '@/app/lib/firebase/firestore';
+import { UserTransactions, TransactionsProvider } from '@/app/lib/context/TransactionsContext';
+import { addDocument } from '@/app/lib/firebase/firestore';
 import { transactionsColumnLabels } from '@/app/lib/constants/transactions';
 import { seedTransactions } from '@/data/transactionsSeeder';
 
+const AddTransactionTable = () => {
+  const { transactions } = UserTransactions();
+
+  return (
+    <BaseTable
+      items={transactions}
+      headLabels={transactionsColumnLabels}
+      tableClassName="flex-fill"
+    />
+  );
+};
+
 const TransactionsPage = () => {
   const { user } = UserAuth();
-  const [transactions, setTransactions] = useState([]);
 
   const handleIt = async () => {
     addDocument('transactions', {
@@ -42,18 +54,7 @@ const TransactionsPage = () => {
     })
   };
 
-  useEffect(() => {
-    const fetchTransactions = async () => {
-        try {
-          const transactions = await getDocuments('transactions', user.uid);
-          setTransactions(transactions);
-        } catch ({ code, error }) {
-          console.log(code, error);
-        }
-    };
-
-    fetchTransactions();
-  }, [transactions.length, user])
+  if (!user) return null;
 
   return (
     <section className="flex-fill">
@@ -62,9 +63,11 @@ const TransactionsPage = () => {
       {/* <Button onClick={() => seedTransactions(user.uid)}>Click It</Button> */}
 
       <section className="d-flex">
-        <BaseTable items={transactions} headLabels={transactionsColumnLabels} tableClassName="flex-fill" />
+        <TransactionsProvider>
+          <AddTransactionTable />
 
-        <TableSidebar />
+          <TableSidebar userId={user.uid} />
+        </TransactionsProvider>
       </section>
     </section>
   )
