@@ -1,6 +1,6 @@
 'use client'
 
-import React from "react";
+import React from 'react';
 
 // Form Validation.
 import * as formik from 'formik';
@@ -13,188 +13,80 @@ import FloatingLabel from 'react-bootstrap/FloatingLabel';
 // Custom Imports.
 import { UserTransactions } from '@/app/lib/context/TransactionsContext';
 import { transactionSchema } from '@/app/lib/constants/yup';
+import { formGroups } from '@/app/lib/constants/transactions';
 
-const AddTransactionForm = ({ handleAddTransaction }) => {
-  const { transactionTypes, transactionCategories, accountTypes } = UserTransactions();
+const FormGroup = ({ labelText, controlType, controlProps, errorText, items = [] }) => {
+    const removeWhitespace = value => value.replace(' ', '');
+
+    return (
+        <Form.Group controlId={`form${removeWhitespace(labelText)}`}  className="m-2 flex-basis-100">
+            <FloatingLabel controlId={`floating${removeWhitespace(labelText)}`} label={labelText} className="text-capitalize">
+                {controlType === 'select' && (
+                    <Form.Select size="sm" className="text-capitalize" {...controlProps}>
+                        <option value={null}>-- select one --</option>
+
+                        {items.map(({ id, definition }) => (
+                            <option key={`${removeWhitespace(labelText)}-${id}`} value={id}>
+                                {definition}
+                            </option>
+                        ))}
+                    </Form.Select>
+                )}
+
+                {controlType === 'control' && (
+                    <Form.Control size="sm" {...controlProps} />
+                )}
+
+                <Form.Control.Feedback type="invalid" style={{ overflowWrap: 'break-word' }} className="text-start">
+                    {errorText}
+                </Form.Control.Feedback>
+            </FloatingLabel>
+        </Form.Group>
+    );
+};
+
+const AddTransactionForm = ({ handleAddTransaction, handleCloseSidebar }) => {
+  const { transactionTypes: typeIds, transactionCategories: categoryIds, accountTypes: accountIds } = UserTransactions();
   const { Formik } = formik;
+
+  const selectItemsData = { typeIds, categoryIds, accountIds };
+
+  const initialValues = formGroups
+    .map((items) => items.map(({ controlProps: { name } }) => name))
+    .flat()
+    .reduce((prev, key) => ({ ...prev, [key]: '' }), {});
 
   return (
     <Formik
         validationSchema={transactionSchema}
         onSubmit={handleAddTransaction}
-        initialValues={{ 
-            typeId: undefined, 
-            categoryId: undefined, 
-            amount: undefined,
-            accountId:undefined,
-            date: undefined,
-            time: undefined,
-            note: undefined
-        }}
+        initialValues={initialValues}
       >
         {({ handleSubmit, handleChange, values, touched, errors }) => (
             <Form noValidate onSubmit={handleSubmit}>
-                <div className="d-flex">
-                    <Form.Group controlId="formTransactionType" className="m-2 flex-basis-100">
-                        <FloatingLabel controlId="floatingTransactionType" label="Transaction Type">
-                            <Form.Select
-                                size="sm"
-                                name="typeId"
-                                aria-label="Select transaction type"
-                                value={values.typeId}
-                                onChange={handleChange}
-                                isInvalid={!!errors.typeId}
-                                className="text-capitalize"
-                            >
-                                <option value={null}>-- select one --</option>
-
-                                {transactionTypes.map(({ id, definition }) => (
-                                    <option key={`transaction-type-${id}`} value={id}>
-                                        {definition}
-                                    </option>
-                                ))}
-                            </Form.Select>
-
-                            <Form.Control.Feedback type="invalid" style={{ overflowWrap: 'break-word' }} className="text-start">
-                                {errors.typeId}
-                            </Form.Control.Feedback>
-                        </FloatingLabel>
-                    </Form.Group>
-
-                    <Form.Group controlId="formCategory" className="m-2 flex-basis-100">
-                        <FloatingLabel controlId="floatingCategory" label="Category">
-                            <Form.Select 
-                                size="sm" 
-                                name="categoryId" 
-                                aria-label="Select transaction category"
-                                value={values.categoryId}
-                                onChange={handleChange}
-                                isInvalid={!!errors.categoryId}
-                                className="text-capitalize"
-                            >
-                                <option value={undefined}>-- select one --</option>
-
-                                {transactionCategories.map(({ id, definition }) => (
-                                    <option key={`transaction-categories-${id}`} value={id}>
-                                        {definition}
-                                    </option>
-                                ))}
-                            </Form.Select>
-
-                            <Form.Control.Feedback type="invalid" style={{ overflowWrap: 'break-word' }} className="text-start">
-                                {errors.categoryId}
-                            </Form.Control.Feedback>
-                        </FloatingLabel>
-                    </Form.Group>
-                </div>
-
-                <div className="d-flex">
-                    <Form.Group controlId="formAmount" onSubmit={handleSubmit} className="m-2 flex-basis-100">
-                        <FloatingLabel controlId="floatingAmount" label="Amount">
-                            <Form.Control 
-                                type="number"
-                                name="amount"
-                                size="sm"
-                                placeholder="88.88"
-                                value={values.amount}
-                                onChange={handleChange}
-                                isInvalid={!!errors.amount}
+                {formGroups.map((items, index) => (
+                    <div key={`form-groups-${index}`} className="d-flex">
+                        {items.map(({ labelText, controlType, controlProps: { name, ...controlProps } }) => (
+                            <FormGroup
+                                key={`formGroup-${labelText}`}
+                                labelText={labelText}
+                                controlType={controlType}
+                                items={selectItemsData[`${name}s`] || []}
+                                errorText={errors[name]}
+                                controlProps={{
+                                    ...controlProps,
+                                    name,
+                                    value: values[name],
+                                    onChange: handleChange,
+                                    isInvalid: !!errors[name]
+                                }}
                             />
-
-                            <Form.Control.Feedback type="invalid" style={{ overflowWrap: 'break-word' }} className="text-start">
-                                {errors.amount}
-                            </Form.Control.Feedback>
-                        </FloatingLabel>
-                    </Form.Group>
-
-                    <Form.Group controlId="formAccount" className="m-2 flex-basis-100">
-                        <FloatingLabel controlId="floatingAccount" label="Account">
-                            <Form.Select 
-                                size="sm"
-                                name="accountId"
-                                aria-label="Select an account"
-                                value={values.accountId}
-                                onChange={handleChange}
-                                isInvalid={!!errors.accountId}
-                                className="text-capitalize"
-                            >
-                                <option value={undefined}>-- select one --</option>
-
-                                {accountTypes.map(({ id, definition }) => (
-                                    <option key={`account-types-${id}`} value={id}>
-                                        {definition}
-                                    </option>
-                                ))}
-                            </Form.Select>
-
-                            <Form.Control.Feedback type="invalid" style={{ overflowWrap: 'break-word' }} className="text-start">
-                                {errors.accountId}
-                            </Form.Control.Feedback>
-                        </FloatingLabel>
-                    </Form.Group>
-                </div>
-                
-                <div className="d-flex">
-                    <Form.Group controlId="formDate" className="m-2 flex-basis-100">
-                        <FloatingLabel controlId="floatingDate" label="Date">
-                            <Form.Control 
-                                type="date"
-                                name="date"
-                                size="sm"
-                                placeholder="Select a date"
-                                value={values.date}
-                                onChange={handleChange}
-                                isInvalid={!!errors.date}
-                            />
-
-                            <Form.Control.Feedback type="invalid" style={{ overflowWrap: 'break-word' }} className="text-start">
-                                {errors.date}
-                            </Form.Control.Feedback>
-                        </FloatingLabel>
-                    </Form.Group>
-
-                    <Form.Group controlId="formTime" className="m-2 flex-basis-100">
-                        <FloatingLabel controlId="floatingTime" label="Time">
-                            <Form.Control 
-                                type="time"
-                                name="time"
-                                size="sm"
-                                placeholder="Select a time"
-                                value={values.time}
-                                onChange={handleChange}
-                                isInvalid={!!errors.time}
-                            />
-
-                            <Form.Control.Feedback type="invalid" style={{ overflowWrap: 'break-word' }} className="text-start">
-                                {errors.time}
-                            </Form.Control.Feedback>
-                        </FloatingLabel>
-                    </Form.Group>
-                </div>
-
-                <div className="d-flex">
-                    <Form.Group controlId="formNote" className="m-2 flex-basis-100">
-                        <FloatingLabel controlId="floatingNote" label="Note">
-                            <Form.Control 
-                                as="textarea"
-                                name="note"
-                                size="sm"
-                                placeholder="Add a note"
-                                style={{ height: 150 }}
-                                value={values.note}
-                                onChange={handleChange}
-                                isInvalid={!!errors.note}
-                            />
-
-                            <Form.Control.Feedback type="invalid" style={{ overflowWrap: 'break-word' }} className="text-start">
-                                {errors.note}
-                            </Form.Control.Feedback>
-                        </FloatingLabel>
-                    </Form.Group>
-                </div>
+                        ))}
+                    </div>
+                ))}
 
                 <div className="d-flex justify-content-end">
-                    <Button variant="link">
+                    <Button variant="link" onClick={handleCloseSidebar}>
                         Cancel
                     </Button>
 
