@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 
 // Custom Imports.
 import { UserAuth } from './AuthContext.js';
@@ -13,39 +13,41 @@ export const TransactionsProvider = ({ children }) => {
     const [transactions, setTransactions] = useState([]);
     const [transactionTypes, setTransactionTypes] = useState([]);
     const [transactionCategories, setTransactionCategories] = useState([]);
-    const [accountTypes, setAccountTypes] = useState([]);      
+    const [accountTypes, setAccountTypes] = useState([]);
+
+    const fetchTransactions = useCallback(async (orderField = 'date', isDesc = false) => {
+      try {
+        const transactions = await getDocsByUserId('transactions', user.uid, orderField, isDesc);
+        const transactionTypes = await getDocuments('transactionTypes');
+        const accountTypes = await getDocuments('accountTypes');
+        const transactionCategories = await getDocuments('transactionCategories');
+
+        const parentCategories = transactionCategories.filter(({ parentCategoryId }) => !parentCategoryId);
+
+        const groupedCategories = parentCategories.map(category => ({
+          ...category,
+          items: transactionCategories.filter(({ parentCategoryId }) => parentCategoryId === category.id)
+        }));
+
+        setTransactions(transactions);
+        setTransactionTypes(transactionTypes);
+        setTransactionCategories(groupedCategories);
+        setAccountTypes(accountTypes)
+      } catch (e) {
+        console.log(e);
+      }
+  }, [user.uid]);
 
     useEffect(() => {
-        const fetchTransactions = async () => {
-            try {
-              const transactions = await getDocsByUserId('transactions', user.uid);
-              const transactionTypes = await getDocuments('transactionTypes');
-              const accountTypes = await getDocuments('accountTypes');
-              const transactionCategories = await getDocuments('transactionCategories');
-
-              const parentCategories = transactionCategories.filter(({ parentCategoryId }) => !parentCategoryId);
-
-              const groupedCategories = parentCategories.map(category => ({
-                ...category,
-                items: transactionCategories.filter(({ parentCategoryId }) => parentCategoryId === category.id)
-              }));
-
-              setTransactions(transactions);
-              setTransactionTypes(transactionTypes);
-              setTransactionCategories(groupedCategories);
-              setAccountTypes(accountTypes)
-            } catch (e) {
-              console.log(e);
-            }
-        };
-
         if (user) {
             fetchTransactions();
         }
-    }, [transactions.length, user]);
+    }, [transactions.length, user, fetchTransactions]);
+
+    const data = { transactions, transactionTypes, transactionCategories, accountTypes, fetchTransactions };
 
     return (
-        <TransactionsContext.Provider value={{ transactions, transactionTypes, transactionCategories, accountTypes }}>
+        <TransactionsContext.Provider value={data}>
             {children}
         </TransactionsContext.Provider>
     );

@@ -3,12 +3,26 @@ import React from 'react';
 // Bootstrap Components.
 import Button from 'react-bootstrap/Button';
 import Table from 'react-bootstrap/Table';
+import {
+  SortUp as SortUpIcon,
+  SortDown as SortDownIcon
+} from 'react-bootstrap-icons';
 
 // Custom Imports.
 import { camelToFlat } from '@/app/lib/helpers/global';
 
-const BaseTable = ({ items = [], headLabels = [], tableClassName = '' }) => {
+const BaseTable = (props) => {
+  const {
+    items = [],
+    headLabels = [],
+    sortData : { orderField, isDesc } = { orderField: 'date', isDesc: false },
+    handleSort = () => null,
+    tableClassName = ''
+  } = props
+
   if (!items?.length) return null;
+
+  const SortIcon = isDesc ? SortDownIcon : SortUpIcon;
 
   const getLabelFromKey = key => camelToFlat(key).replace(' Id', '').trim();
 
@@ -23,8 +37,15 @@ const BaseTable = ({ items = [], headLabels = [], tableClassName = '' }) => {
           <tr>
             {headLabels.map(dataKey => (
               <th key={`item-${dataKey}`}>
-                <Button variant='link' className="w-100 rounded-0 text-decoration-none text-body">
-                  {getLabelFromKey(dataKey)}
+                <Button
+                  variant='link'
+                  data-order-field={dataKey}
+                  onClick={handleSort}
+                  className="w-100 rounded-0 text-decoration-none text-body fw-bold"
+                >
+                  <span>{getLabelFromKey(dataKey)}</span>
+                  
+                  <SortIcon size={18} className={`mx-2 ${dataKey === orderField ? 'visible' : 'invisible'}`} />
                 </Button>
               </th>
             ))}

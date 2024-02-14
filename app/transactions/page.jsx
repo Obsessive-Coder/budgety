@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react';
+import React, { useState } from 'react';
 
 // Custom Components.
 import BaseTable from '../components/BaseTable';
@@ -12,12 +12,24 @@ import { UserTransactions, TransactionsProvider } from '@/app/lib/context/Transa
 import { transactionsColumnLabels } from '@/app/lib/constants/transactions';
 
 const TransactionTable = () => {
-  const { transactions } = UserTransactions();
+  const { transactions, fetchTransactions } = UserTransactions();
+  const [sortData, setSortData] = useState({ orderField: 'date', isDesc: false});
+  const { user } = UserAuth();
+  if (!user) return null;
+
+  const toggleSortData = ({ currentTarget }) => {
+    const orderField = currentTarget.getAttribute('data-order-field');    
+    const { isDesc } = sortData;
+    setSortData({ orderField, isDesc: orderField === sortData.orderField ? !isDesc : false});
+    fetchTransactions(orderField, !isDesc);
+  }
 
   return (
     <BaseTable
       items={transactions}
       headLabels={transactionsColumnLabels}
+      sortData={sortData}
+      handleSort={toggleSortData}
       tableClassName="flex-fill"
     />
   );
