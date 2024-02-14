@@ -1,6 +1,7 @@
 import React from 'react';
 
 // Bootstrap Components.
+import Button from 'react-bootstrap/Button';
 import Table from 'react-bootstrap/Table';
 
 // Custom Imports.
@@ -16,12 +17,16 @@ const BaseTable = ({ items = [], headLabels = [], tableClassName = '' }) => {
   };
 
   return (
-    <div className={`${tableClassName}`}>
-      <Table striped bordered hover responsive size='sm'>
+    <div className={`border border-2 rounded ${tableClassName}`}>
+      <Table striped hover responsive size='sm' className="m-0 border border-2 rounded">
         <thead className="text-center text-capitalize">
           <tr>
             {headLabels.map(dataKey => (
-              <th key={`item-${dataKey}`}>{getLabelFromKey(dataKey)}</th>
+              <th key={`item-${dataKey}`}>
+                <Button variant='link' className="w-100 rounded-0 text-decoration-none text-body">
+                  {getLabelFromKey(dataKey)}
+                </Button>
+              </th>
             ))}
           </tr>
         </thead>

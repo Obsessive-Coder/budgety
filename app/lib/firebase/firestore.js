@@ -1,12 +1,13 @@
 'use client'
 
+import { useId } from 'react';
 import { db } from './firebase';
-import { collection, doc, addDoc, getDocs, getDoc, deleteDoc, updateDoc, query, where } from 'firebase/firestore';
+import { collection, doc, addDoc, getDocs, getDoc, deleteDoc, updateDoc, query, where, orderBy, QueryOrderByConstraint, limit } from 'firebase/firestore';
 
 export async function getDocuments(collectionName) {
     try {
         const documentRef = collection(db, collectionName);
-        const  q = query(documentRef);
+        const  q = query(documentRef, );
         const querySnapshot = await getDocs(q);
         return querySnapshot.docs.map((document) => ({id: document.id, ...document.data()}));
     } catch ({ code, message }) {
@@ -17,7 +18,9 @@ export async function getDocuments(collectionName) {
 export async function getDocsByUserId(collectionName, userId) {
     try {
         const documentRef = collection(db, collectionName);
-        const q = query(documentRef, where('userId', '==', userId));
+        // const q = query(documentRef, where('userId', '==', userId), limit(3));
+        const q = query(documentRef, where('userId', '==', userId), orderBy('userId'), orderBy('amount', 'desc'), limit(20));
+
         const querySnapshot = await getDocs(q);
         return querySnapshot.docs.map((document) => ({id: document.id, ...document.data()}));
     } catch ({ code, message }) {
