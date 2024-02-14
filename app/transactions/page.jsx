@@ -12,8 +12,15 @@ import { UserTransactions, TransactionsProvider } from '@/app/lib/context/Transa
 import { transactionsColumnLabels } from '@/app/lib/constants/transactions';
 
 const TransactionTable = () => {
-  const { transactions, fetchTransactions } = UserTransactions();
-  const [sortData, setSortData] = useState({ orderField: 'date', isDesc: false});
+  const { 
+    transactions, 
+    fetchTransactions,
+     transactionTypes, 
+     transactionCategories, 
+     accountTypes 
+  } = UserTransactions();
+  
+  const [sortData, setSortData] = useState({ orderField: 'date', isDesc: true});
   const { user } = UserAuth();
   if (!user) return null;
 
@@ -24,13 +31,24 @@ const TransactionTable = () => {
     fetchTransactions(orderField, !isDesc);
   }
 
+  const getIdColumnText = (dataKey, dataId) => {
+    const staticData = { typeId: transactionTypes, categoryId: transactionCategories, accountId: accountTypes };
+
+    return staticData[dataKey]
+      ?.filter(({ id, items = [] }) => {
+        return id === dataId || items.filter(({ id }) => id === dataId).length > 0;
+      })[0]?.definition ?? 'Unknown value';
+  };
+
   return (
     <BaseTable
       items={transactions}
       headLabels={transactionsColumnLabels}
       sortData={sortData}
+      getIdColumnText={getIdColumnText}
       handleSort={toggleSortData}
       tableClassName="flex-fill"
+      bodyClassName="text-capitalize"
     />
   );
 };

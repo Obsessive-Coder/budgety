@@ -15,7 +15,7 @@ export const TransactionsProvider = ({ children }) => {
     const [transactionCategories, setTransactionCategories] = useState([]);
     const [accountTypes, setAccountTypes] = useState([]);
 
-    const fetchTransactions = useCallback(async (orderField = 'date', isDesc = false) => {
+    const fetchTransactions = useCallback(async (orderField = 'date', isDesc = true) => {
       try {
         const transactions = await getDocsByUserId('transactions', user.uid, orderField, isDesc);
         const transactionTypes = await getDocuments('transactionTypes');

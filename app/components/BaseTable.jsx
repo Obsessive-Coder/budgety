@@ -11,13 +11,20 @@ import {
 // Custom Imports.
 import { camelToFlat } from '@/app/lib/helpers/global';
 
+const USDollar = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD',
+});
+
 const BaseTable = (props) => {
   const {
     items = [],
     headLabels = [],
-    sortData : { orderField, isDesc } = { orderField: 'date', isDesc: false },
+    sortData : { orderField, isDesc } = { orderField: 'date', isDesc: true },
+    getIdColumnText,
     handleSort = () => null,
-    tableClassName = ''
+    tableClassName = '',
+    bodyClassName = '',
   } = props
 
   if (!items?.length) return null;
@@ -32,7 +39,7 @@ const BaseTable = (props) => {
 
   return (
     <div className={`border border-2 rounded ${tableClassName}`}>
-      <Table striped hover responsive size='sm' className="m-0 border border-2 rounded">
+      <Table striped bordered hover responsive size='sm' className="m-0 border border-2 rounded">
         <thead className="text-center text-capitalize">
           <tr>
             {headLabels.map(dataKey => (
@@ -52,12 +59,22 @@ const BaseTable = (props) => {
           </tr>
         </thead>
         
-        <tbody>
+        <tbody className={bodyClassName}>
           {items.map(item => (
             <tr key={`item-${item.id}`} onClick={handleRowOnClick}>
               {headLabels.map(dataKey => (
-                <td key={`item-data-${dataKey}-${item.id}`}>
-                    {item[dataKey]}
+                <td key={`item-data-${dataKey}-${item.id}`} className={`px-2 ${dataKey === 'amount' ? 'text-end' : ''}`}>
+                    {dataKey.includes('Id') ? (
+                        getIdColumnText(dataKey, item[dataKey])
+                    ) : (
+                      <>
+                        {dataKey === 'amount' ? (
+                          USDollar.format(item[dataKey])
+                        ) : (
+                          item[dataKey] 
+                        )}
+                      </>
+                    )}
                 </td>
               ))}
             </tr>
