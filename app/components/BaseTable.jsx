@@ -20,6 +20,7 @@ const BaseTable = (props) => {
   const {
     items = [],
     headLabels = [],
+    modifiedDocumentId,
     sortData : { orderField, isDesc } = { orderField: 'date', isDesc: true },
     getIdColumnText,
     handleSort = () => null,
@@ -63,7 +64,10 @@ const BaseTable = (props) => {
           {items.map(item => (
             <tr key={`item-${item.id}`} onClick={handleRowOnClick}>
               {headLabels.map(dataKey => (
-                <td key={`item-data-${dataKey}-${item.id}`} className={`px-2 ${dataKey === 'amount' ? 'text-end' : ''}`}>
+                <td
+                  key={`item-data-${dataKey}-${item.id}`}
+                  className={`px-2 ${dataKey === 'amount' ? 'text-end' : ''} ${item.id === modifiedDocumentId ? 'bg-success' : ''}`}
+                >
                     {dataKey.includes('Id') ? (
                         getIdColumnText(dataKey, item[dataKey])
                     ) : (

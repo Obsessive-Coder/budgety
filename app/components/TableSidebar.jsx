@@ -9,6 +9,7 @@ import AddTransactionForm from './AddTransactionForm';
 // Custom Imports.
 import { addDocument } from '@/app/lib/firebase/firestore';
 import { UserAuth } from '@/app/lib/context/AuthContext';
+import { UserTransactions } from '@/app/lib/context/TransactionsContext';
 
 const buttonProps = {
   label: 'New Transaction',
@@ -20,6 +21,7 @@ const headerProps = { label: 'New Transaction' };
 
 const TableSidebar = ({ userId }) => {
   const { setUserAlert } = UserAuth();
+  const { setModifiedDocumentId } = UserTransactions();
   const [isOpen, setIsOpen] = useState(false);
 
   const handleOpen = () => setIsOpen(true);
@@ -27,12 +29,17 @@ const TableSidebar = ({ userId }) => {
 
   const handleAddTransaction = async (transaction) => {
     try {
-      await addDocument('transactions', { ...transaction, userId });
+      const newDoc = await addDocument('transactions', { ...transaction, userId });
 
       handleClose();
       
       setUserAlert({ variant: 'success', headingLabel: 'Add Transaction', message: 'Transaction successfully added.'});
-      setTimeout(() => setUserAlert(null), 5000);
+      setTimeout(() => {
+        setUserAlert(null)
+        setModifiedDocumentId(null);
+      }, 3000);
+
+      setModifiedDocumentId(newDoc.id);
     } catch ({ code, message}) {
       console.error(code, message);
       setUserAlert({ variant: 'warning', headingLabel: 'Add Transaction', message: 'Unable to add transaction. Please try again later.'});

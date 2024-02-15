@@ -15,9 +15,10 @@ const TransactionTable = () => {
   const { 
     transactions, 
     fetchTransactions,
-     transactionTypes, 
-     transactionCategories, 
-     accountTypes 
+    transactionTypes, 
+    transactionCategories, 
+    accountTypes,
+    modifiedDocumentId,
   } = UserTransactions();
   
   const [sortData, setSortData] = useState({ orderField: 'date', isDesc: true});
@@ -40,10 +41,13 @@ const TransactionTable = () => {
       })[0]?.definition ?? 'Unknown value';
   };
 
+  console.log(modifiedDocumentId)
+
   return (
     <BaseTable
       items={transactions}
       headLabels={transactionsColumnLabels}
+      modifiedDocumentId={modifiedDocumentId}
       sortData={sortData}
       getIdColumnText={getIdColumnText}
       handleSort={toggleSortData}
