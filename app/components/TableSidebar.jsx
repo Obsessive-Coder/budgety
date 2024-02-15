@@ -37,7 +37,7 @@ const TableSidebar = ({ userId }) => {
       setTimeout(() => {
         setUserAlert(null)
         setModifiedDocumentId(null);
-      }, 3000);
+      }, 5000);
 
       setModifiedDocumentId(newDoc.id);
     } catch ({ code, message}) {
