@@ -49,22 +49,26 @@ const TransactionTable = ({ setEditingItemData }) => {
     return item?.typeId === expenseType?.id;
   };
 
+  const handleDuplicateItem = async item => {
+    delete item.id;
+
+    const duplicateDocument = await addDocument('transactions', item);
+    setModifiedDocumentId(duplicateDocument.id);
+
+    setTimeout(() => setModifiedDocumentId(null), 5000);
+  };
+
   const handleMenuItemOnClick = async (itemId, action) => {
-    const collectionName = 'transactions';
     const item = transactions.filter(({ id }) => id === itemId)[0];
 
     switch (action) {
       case 'duplicate':
-        delete item.id;
-
-        const duplicateDocument = await addDocument(collectionName, item);
-        setModifiedDocumentId(duplicateDocument.id);
-
-        setTimeout(() => setModifiedDocumentId(null), 5000);
+        handleDuplicateItem(item);
         break;
 
       case 'refund':
-      
+        const { id: typeId } = transactionTypes.filter(({ definition }) => definition === 'refund')[0];
+        handleDuplicateItem({ ...item, typeId, amount: Math.abs(item.amount)});
         break;
 
       case 'edit':
@@ -72,7 +76,7 @@ const TransactionTable = ({ setEditingItemData }) => {
         break;
 
       case 'delete':
-        deleteDocument(collectionName, itemId);
+        deleteDocument('transactions', itemId);
     
       default:
         break;
@@ -96,9 +100,7 @@ const TransactionTable = ({ setEditingItemData }) => {
   );
 };
 
-const TransactionsPage = () => {
-  const x = {id: '1', accountId: '6X8mHeSvMfhi7KuthdXL', amount: 800, categoryId: 'PJuBqSx3g4Wi0Me4XPug', date: '2024-02-16', note: '', time: '11:11', typeId: 'x4yl2YTRR8N97eMB2ocC', userId: '9vHPy5TyMfg8gdBWdRuCBKTwUl03' };
-  
+const TransactionsPage = () => {  
   const { user } = UserAuth();
   const [editingItemData, _setEditingItemData] = useState(null);
 

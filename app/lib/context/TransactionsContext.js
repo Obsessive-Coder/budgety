@@ -18,8 +18,8 @@ export const TransactionsProvider = ({ children }) => {
 
     const fetchLoaderData = useCallback(async () => {
       try {
-        const transactionTypes = await getDocuments('transactionTypes');
-        const accountTypes = await getDocuments('accountTypes');
+        const transactionTypes = await getDocuments('transactionTypes', 'order', false);
+        const accountTypes = await getDocuments('accountTypes', 'order', false);
         const transactionCategories = await getDocuments('transactionCategories');
 
         const parentCategories = transactionCategories.filter(({ parentCategoryId }) => !parentCategoryId);
