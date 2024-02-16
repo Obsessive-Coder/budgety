@@ -21,7 +21,7 @@ const BaseOffcanvas = ({ children, isOpen, buttonProps = {}, headerProps = {}, h
 
       <Offcanvas show={isOpen} onHide={handleClose} {...props}>
         <Offcanvas.Header closeButton>
-          <Offcanvas.Title as="h4" className="mx-auto">{titleLabel}</Offcanvas.Title>
+          <Offcanvas.Title as="h4" className="mx-auto text-capitalize">{titleLabel}</Offcanvas.Title>
         </Offcanvas.Header>
 
         <Offcanvas.Body className="text-center">

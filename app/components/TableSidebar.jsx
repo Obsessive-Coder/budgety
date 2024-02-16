@@ -7,7 +7,7 @@ import BaseOffcanvas from './BaseOffcanvas';
 import AddTransactionForm from './AddTransactionForm';
 
 // Custom Imports.
-import { addDocument } from '@/app/lib/firebase/firestore';
+import { addDocument, updateDocument } from '@/app/lib/firebase/firestore';
 import { UserAuth } from '@/app/lib/context/AuthContext';
 import { UserTransactions } from '@/app/lib/context/TransactionsContext';
 
@@ -19,13 +19,18 @@ const buttonProps = {
 
 const headerProps = { label: 'New Transaction' };
 
-const TableSidebar = ({ userId }) => {
+const TableSidebar = ({ userId, editingItemData, setEditingItemData }) => {
   const { setUserAlert } = UserAuth();
   const { setModifiedDocumentId } = UserTransactions();
   const [isOpen, setIsOpen] = useState(false);
 
+  const isEditing = !!editingItemData?.id;
+
   const handleOpen = () => setIsOpen(true);
-  const handleClose = () => setIsOpen(false);
+  const handleClose = () => {
+    setIsOpen(false);
+    setEditingItemData(null);
+  };
 
   const handleAddTransaction = async (transaction) => {
     try {
@@ -47,19 +52,34 @@ const TableSidebar = ({ userId }) => {
     }
   };
 
+  const handleUpdateTransaction = async transaction => {
+    const { id } = editingItemData;
+    await updateDocument('transactions', id, { ...transaction, id })
+    setModifiedDocumentId(id);
+    handleClose();
+    setTimeout(() => setModifiedDocumentId(null), 5000);
+
+  };
+
   return (
     <section style={{ width: '22%' }} className="border rounded mx-3 p-2">
         <h4 className="text-center">Options</h4>
 
         <BaseOffcanvas 
           placement="end"
-          isOpen={isOpen}
+          isOpen={isOpen || isEditing}
           handleOpen={handleOpen}
           handleClose={handleClose}
           buttonProps={buttonProps}
-          headerProps={headerProps}
+          headerProps={{...headerProps, label: `${isEditing ? 'edit' : 'new'} transaction`}}
         >
-          <AddTransactionForm handleAddTransaction={handleAddTransaction} handleCloseSidebar={handleClose} />
+          <AddTransactionForm
+            isEditing={isEditing}
+            editingItemData={editingItemData}
+            handleAddTransaction={handleAddTransaction}
+            handleUpdateTransaction={handleUpdateTransaction}
+            handleCloseSidebar={handleClose}
+          />
         </BaseOffcanvas>
     </section>
   )

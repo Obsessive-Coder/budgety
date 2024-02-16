@@ -64,7 +64,7 @@ const FormGroup = ({ labelText, controlType, controlProps, errorText, items = []
     );
 };
 
-const AddTransactionForm = ({ handleAddTransaction, handleCloseSidebar }) => {
+const AddTransactionForm = ({ isEditing = false, editingItemData, handleAddTransaction, handleUpdateTransaction, handleCloseSidebar }) => {
   const { transactionTypes: typeIds, transactionCategories: categoryIds, accountTypes: accountIds } = UserTransactions();
   const { Formik } = formik;
 
@@ -73,12 +73,12 @@ const AddTransactionForm = ({ handleAddTransaction, handleCloseSidebar }) => {
   const initialValues = formGroups
     .map((items) => items.map(({ controlProps: { name } }) => name))
     .flat()
-    .reduce((prev, key) => ({ ...prev, [key]: '' }), {});
+    .reduce((prev, key) => ({ ...prev, [key]: isEditing ? editingItemData[key] : '' }), {});
 
   return (
     <Formik
         validationSchema={transactionSchema}
-        onSubmit={handleAddTransaction}
+        onSubmit={isEditing ? handleUpdateTransaction : handleAddTransaction}
         initialValues={initialValues}
         validateOnChange={false}
       >
@@ -110,8 +110,8 @@ const AddTransactionForm = ({ handleAddTransaction, handleCloseSidebar }) => {
                         Cancel
                     </Button>
 
-                    <Button variant="outline-primary" type="submit">
-                        Add Transaction
+                    <Button variant="outline-primary" type="submit" className="text-capitalize">
+                        {isEditing ? 'update transaction' : 'add transaction'}
                     </Button>
                 </div>
             </Form>

@@ -12,7 +12,7 @@ import { UserTransactions, TransactionsProvider } from '@/app/lib/context/Transa
 import { transactionsColumnLabels } from '@/app/lib/constants/transactions';
 import { addDocument, deleteDocument } from '@/app/lib/firebase/firestore';
 
-const TransactionTable = () => {
+const TransactionTable = ({ setEditingItemData }) => {
   const { 
     transactions, 
     fetchTransactions,
@@ -51,10 +51,10 @@ const TransactionTable = () => {
 
   const handleMenuItemOnClick = async (itemId, action) => {
     const collectionName = 'transactions';
+    const item = transactions.filter(({ id }) => id === itemId)[0];
 
     switch (action) {
       case 'duplicate':
-        const item = transactions.filter(({ id }) => id === itemId)[0];
         delete item.id;
 
         const duplicateDocument = await addDocument(collectionName, item);
@@ -68,7 +68,7 @@ const TransactionTable = () => {
         break;
 
       case 'edit':
-      
+        setEditingItemData(item);
         break;
 
       case 'delete':
@@ -97,7 +97,15 @@ const TransactionTable = () => {
 };
 
 const TransactionsPage = () => {
+  const x = {id: '1', accountId: '6X8mHeSvMfhi7KuthdXL', amount: 800, categoryId: 'PJuBqSx3g4Wi0Me4XPug', date: '2024-02-16', note: '', time: '11:11', typeId: 'x4yl2YTRR8N97eMB2ocC', userId: '9vHPy5TyMfg8gdBWdRuCBKTwUl03' };
+  
   const { user } = UserAuth();
+  const [editingItemData, _setEditingItemData] = useState(null);
+
+  const setEditingItemData = (x) => {
+    _setEditingItemData(x)
+  }
+
   if (!user) return null;
 
   return (
@@ -106,9 +114,9 @@ const TransactionsPage = () => {
 
       <section className="d-flex">
         <TransactionsProvider>
-          <TransactionTable />
+          <TransactionTable setEditingItemData={setEditingItemData} />
 
-          <TableSidebar userId={user.uid} />
+          <TableSidebar userId={user.uid} editingItemData={editingItemData} setEditingItemData={setEditingItemData} />
         </TransactionsProvider>
       </section>
     </section>
