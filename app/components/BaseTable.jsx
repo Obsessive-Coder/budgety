@@ -26,6 +26,7 @@ const BaseTable = (props) => {
     items = [],
     headLabels = [],
     modifiedDocumentId,
+    getIsTransactionExpense,
     sortData : { orderField, isDesc } = { orderField: 'date', isDesc: true },
     getIdColumnText,
     handleSort = () => null,
@@ -34,8 +35,11 @@ const BaseTable = (props) => {
   } = props
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [selectedItemId, setSelectedItemId] = useState(null);
 
   if (!items?.length) return null;
+
+  const isSelectedItemExpense = getIsTransactionExpense(selectedItemId);
 
   const SortIcon = isDesc ? SortDownIcon : SortUpIcon;
 
@@ -46,11 +50,14 @@ const BaseTable = (props) => {
     tableMenu.style.top = event.clientY + 'px';
     tableMenu.style.left = event.clientX + 'px';
     setIsMenuOpen(!isMenuOpen);
+
+    const itemId = event.currentTarget.getAttribute('data-item-id')
+    setSelectedItemId(itemId);
   };
 
   return (
     <div className={`${tableClassName}`}>
-      <TableMenu isOpen={isMenuOpen} setIsOpen={setIsMenuOpen} />
+      <TableMenu isOpen={isMenuOpen} isSelectedItemExpense={isSelectedItemExpense} />
 
       <Table striped hover responsive size='sm' className="m-0">
         <thead className="text-center text-capitalize">
@@ -74,7 +81,7 @@ const BaseTable = (props) => {
         
         <tbody className={`table-group-divider ${bodyClassName}`}>
           {items.map(item => (
-            <tr key={`item-${item.id}`} onClick={handleRowOnClick}>
+            <tr key={`item-${item.id}`} onClick={handleRowOnClick} data-item-id={item.id}>
               {headLabels.map((dataKey, index) => (
                 <td
                   key={`item-data-${dataKey}-${item.id}`}

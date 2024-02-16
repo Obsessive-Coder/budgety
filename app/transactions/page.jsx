@@ -41,10 +41,17 @@ const TransactionTable = () => {
       })[0]?.definition ?? 'Unknown value';
   };
 
+  const getIsTransactionExpense = itemId => {
+    const item = transactions.filter(({ id }) => id === itemId)[0];
+    const expenseType = transactionTypes.filter(({ definition }) => definition === 'expense')[0];
+    return item?.typeId === expenseType?.id;
+  };
+
   return (
     <BaseTable
       items={transactions}
       headLabels={transactionsColumnLabels}
+      getIsTransactionExpense={getIsTransactionExpense}
       modifiedDocumentId={modifiedDocumentId}
       sortData={sortData}
       getIdColumnText={getIdColumnText}
