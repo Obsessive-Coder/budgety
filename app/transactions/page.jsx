@@ -10,7 +10,7 @@ import TableSidebar from '../components/TableSidebar';
 import { UserAuth } from '@/app/lib/context/AuthContext';
 import { UserTransactions, TransactionsProvider } from '@/app/lib/context/TransactionsContext';
 import { transactionsColumnLabels } from '@/app/lib/constants/transactions';
-import { deleteDocument } from '@/app/lib/firebase/firestore';
+import { addDocument, deleteDocument } from '@/app/lib/firebase/firestore';
 
 const TransactionTable = () => {
   const { 
@@ -20,6 +20,7 @@ const TransactionTable = () => {
     transactionCategories, 
     accountTypes,
     modifiedDocumentId,
+    setModifiedDocumentId
   } = UserTransactions();
   
   const [sortData, setSortData] = useState({ orderField: 'date', isDesc: true});
@@ -48,10 +49,18 @@ const TransactionTable = () => {
     return item?.typeId === expenseType?.id;
   };
 
-  const handleMenuItemOnClick = (itemId, action) => {
+  const handleMenuItemOnClick = async (itemId, action) => {
+    const collectionName = 'transactions';
+
     switch (action) {
       case 'duplicate':
-        
+        const item = transactions.filter(({ id }) => id === itemId)[0];
+        delete item.id;
+
+        const duplicateDocument = await addDocument(collectionName, item);
+        setModifiedDocumentId(duplicateDocument.id);
+
+        setTimeout(() => setModifiedDocumentId(null), 5000);
         break;
 
       case 'refund':
@@ -63,7 +72,7 @@ const TransactionTable = () => {
         break;
 
       case 'delete':
-        return deleteDocument('transactions', itemId);
+        deleteDocument(collectionName, itemId);
     
       default:
         break;
