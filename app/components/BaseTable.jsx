@@ -39,8 +39,8 @@ const BaseTable = (props) => {
   };
 
   return (
-    <div className={`border border-2 rounded ${tableClassName}`}>
-      <Table striped bordered hover responsive size='sm' className="m-0 border border-2 rounded">
+    <div className={`${tableClassName}`}>
+      <Table striped hover responsive size='sm' className="m-0">
         <thead className="text-center text-capitalize">
           <tr>
             {headLabels.map(dataKey => (
@@ -60,13 +60,13 @@ const BaseTable = (props) => {
           </tr>
         </thead>
         
-        <tbody className={bodyClassName}>
+        <tbody className={`table-group-divider ${bodyClassName}`}>
           {items.map(item => (
             <tr key={`item-${item.id}`} onClick={handleRowOnClick}>
-              {headLabels.map(dataKey => (
+              {headLabels.map((dataKey, index) => (
                 <td
                   key={`item-data-${dataKey}-${item.id}`}
-                  className={`px-2 ${dataKey === 'amount' ? 'text-end' : ''} ${item.id === modifiedDocumentId ? 'bg-success' : ''}`}
+                  className={`px-2 ${index === items.length - 1 ? '' : 'border'} ${dataKey === 'amount' ? 'text-end' : ''} ${item.id === modifiedDocumentId ? 'bg-success' : ''}`}
                 >
                     {dataKey.includes('Id') ? (
                         getIdColumnText(dataKey, item[dataKey])

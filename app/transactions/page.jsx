@@ -41,8 +41,6 @@ const TransactionTable = () => {
       })[0]?.definition ?? 'Unknown value';
   };
 
-  console.log(modifiedDocumentId)
-
   return (
     <BaseTable
       items={transactions}
