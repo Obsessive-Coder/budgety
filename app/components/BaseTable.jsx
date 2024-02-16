@@ -30,6 +30,7 @@ const BaseTable = (props) => {
     sortData : { orderField, isDesc } = { orderField: 'date', isDesc: true },
     getIdColumnText,
     handleSort = () => null,
+    handleMenuItemOnClick = () => null,
     tableClassName = '',
     bodyClassName = '',
   } = props
@@ -57,7 +58,13 @@ const BaseTable = (props) => {
 
   return (
     <div className={`${tableClassName}`}>
-      <TableMenu isOpen={isMenuOpen} isSelectedItemExpense={isSelectedItemExpense} />
+      <TableMenu
+        isOpen={isMenuOpen}
+        selectedItemId={selectedItemId}
+        isSelectedItemExpense={isSelectedItemExpense}
+        setIsMenuOpen={setIsMenuOpen}
+        handleMenuItemOnClick={handleMenuItemOnClick}
+      />
 
       <Table striped hover responsive size='sm' className="m-0">
         <thead className="text-center text-capitalize">

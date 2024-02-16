@@ -10,6 +10,7 @@ import TableSidebar from '../components/TableSidebar';
 import { UserAuth } from '@/app/lib/context/AuthContext';
 import { UserTransactions, TransactionsProvider } from '@/app/lib/context/TransactionsContext';
 import { transactionsColumnLabels } from '@/app/lib/constants/transactions';
+import { deleteDocument } from '@/app/lib/firebase/firestore';
 
 const TransactionTable = () => {
   const { 
@@ -47,6 +48,29 @@ const TransactionTable = () => {
     return item?.typeId === expenseType?.id;
   };
 
+  const handleMenuItemOnClick = (itemId, action) => {
+    switch (action) {
+      case 'duplicate':
+        
+        break;
+
+      case 'refund':
+      
+        break;
+
+      case 'edit':
+      
+        break;
+
+      case 'delete':
+        return deleteDocument('transactions', itemId);
+    
+      default:
+        break;
+    }
+
+  }
+
   return (
     <BaseTable
       items={transactions}
@@ -56,6 +80,7 @@ const TransactionTable = () => {
       sortData={sortData}
       getIdColumnText={getIdColumnText}
       handleSort={toggleSortData}
+      handleMenuItemOnClick={handleMenuItemOnClick}
       tableClassName="flex-fill"
       bodyClassName="text-capitalize"
     />
