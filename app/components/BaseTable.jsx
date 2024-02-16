@@ -1,12 +1,17 @@
-import React from 'react';
+'use client'
+
+import React, { useState } from 'react';
 
 // Bootstrap Components.
 import Button from 'react-bootstrap/Button';
 import Table from 'react-bootstrap/Table';
 import {
   SortUp as SortUpIcon,
-  SortDown as SortDownIcon
+  SortDown as SortDownIcon,
 } from 'react-bootstrap-icons';
+
+// Custom Components.
+import TableMenu from './TableMenu';
 
 // Custom Imports.
 import { camelToFlat } from '@/app/lib/helpers/global';
@@ -28,18 +33,25 @@ const BaseTable = (props) => {
     bodyClassName = '',
   } = props
 
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   if (!items?.length) return null;
 
   const SortIcon = isDesc ? SortDownIcon : SortUpIcon;
 
   const getLabelFromKey = key => camelToFlat(key).replace(' Id', '').trim();
 
-  const handleRowOnClick = () => {
-    alert('TODO: Show context menu');
+  const handleRowOnClick = (event) => {
+    const tableMenu = document.getElementById('table-menu')
+    tableMenu.style.top = event.clientY + 'px';
+    tableMenu.style.left = event.clientX + 'px';
+    setIsMenuOpen(!isMenuOpen);
   };
 
   return (
     <div className={`${tableClassName}`}>
+      <TableMenu isOpen={isMenuOpen} setIsOpen={setIsMenuOpen} />
+
       <Table striped hover responsive size='sm' className="m-0">
         <thead className="text-center text-capitalize">
           <tr>
