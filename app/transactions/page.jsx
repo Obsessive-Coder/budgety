@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react';
+import React, { useState } from 'react';
 
 // Custom Components.
 import BaseTable from '../components/BaseTable';
@@ -12,13 +12,45 @@ import { UserTransactions, TransactionsProvider } from '@/app/lib/context/Transa
 import { transactionsColumnLabels } from '@/app/lib/constants/transactions';
 
 const TransactionTable = () => {
-  const { transactions } = UserTransactions();
+  const { 
+    transactions, 
+    fetchTransactions,
+    transactionTypes, 
+    transactionCategories, 
+    accountTypes,
+    modifiedDocumentId,
+  } = UserTransactions();
+  
+  const [sortData, setSortData] = useState({ orderField: 'date', isDesc: true});
+  const { user } = UserAuth();
+  if (!user) return null;
+
+  const toggleSortData = ({ currentTarget }) => {
+    const orderField = currentTarget.getAttribute('data-order-field');    
+    const { isDesc } = sortData;
+    setSortData({ orderField, isDesc: orderField === sortData.orderField ? !isDesc : false});
+    fetchTransactions(orderField, !isDesc);
+  }
+
+  const getIdColumnText = (dataKey, dataId) => {
+    const staticData = { typeId: transactionTypes, categoryId: transactionCategories, accountId: accountTypes };
+
+    return staticData[dataKey]
+      ?.filter(({ id, items = [] }) => {
+        return id === dataId || items.filter(({ id }) => id === dataId).length > 0;
+      })[0]?.definition ?? 'Unknown value';
+  };
 
   return (
     <BaseTable
       items={transactions}
       headLabels={transactionsColumnLabels}
+      modifiedDocumentId={modifiedDocumentId}
+      sortData={sortData}
+      getIdColumnText={getIdColumnText}
+      handleSort={toggleSortData}
       tableClassName="flex-fill"
+      bodyClassName="text-capitalize"
     />
   );
 };

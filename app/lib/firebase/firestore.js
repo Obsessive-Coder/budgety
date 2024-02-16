@@ -1,7 +1,24 @@
 'use client'
 
 import { db } from './firebase';
-import { collection, doc, addDoc, getDocs, getDoc, deleteDoc, updateDoc, query, where } from 'firebase/firestore';
+import {
+    collection,
+    doc,
+    addDoc,
+    getDocs,
+    deleteDoc,
+    updateDoc,
+    query,
+    where,
+    orderBy,
+    limit,
+    onSnapshot as _onSnapshot
+} from 'firebase/firestore';
+
+export function onSnapshot(userId, collectionName = '', callback) {
+    const q = query(collection(db, collectionName), where('userId', '==', userId));
+    return _onSnapshot(q, callback);    
+}
 
 export async function getDocuments(collectionName) {
     try {
@@ -14,10 +31,18 @@ export async function getDocuments(collectionName) {
     }
 }
 
-export async function getDocsByUserId(collectionName, userId) {
+export async function getDocsByUserId(collectionName, userId, orderField, isDesc, recordLimit = 25) {
     try {
         const documentRef = collection(db, collectionName);
-        const q = query(documentRef, where('userId', '==', userId));
+
+        const q = query(
+            documentRef,
+            where('userId', '==', userId),
+            orderBy('userId'),
+            orderBy(orderField, isDesc ? 'desc' : 'asc'),
+            limit(recordLimit)
+        );
+
         const querySnapshot = await getDocs(q);
         return querySnapshot.docs.map((document) => ({id: document.id, ...document.data()}));
     } catch ({ code, message }) {
