@@ -72,7 +72,14 @@ const AddTransactionForm = ({ isEditing = false, editingItemData, handleAddTrans
   const initialValues = formGroups
     .map((items) => items.map(({ controlProps: { name } }) => name))
     .flat()
-    .reduce((prev, key) => ({ ...prev, [key]: isEditing ? editingItemData[key] : '' }), {});
+    .reduce((prev, key) => {
+        return ({
+            ...prev,
+            [key]: key === 'date' ? new Date().toJSON().slice(0,10) : ''
+        });
+    }, {});
+
+    console.log(new Date().toJSON().slice(0,10))
 
   const handleOnChange = (event, callback) => {
     const { value, name } = event.currentTarget;
@@ -124,7 +131,7 @@ const AddTransactionForm = ({ isEditing = false, editingItemData, handleAddTrans
                     </div>
                 ))}
 
-                <div className="d-flex justify-content-end">
+                <div className="d-flex justify-content-end p-2">
                     <Button variant="link" onClick={handleCloseSidebar}>
                         Cancel
                     </Button>
