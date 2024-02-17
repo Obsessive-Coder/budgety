@@ -21,7 +21,9 @@ export const formGroups = [[{
         name: 'amount',
         'aria-label': 'Enter a transaction amount',
         type: 'number',
-        placeholder: '88.88'
+        placeholder: '0',
+        step: '0.01',
+        min: '0'
     }
   }, {
     labelText: 'account',

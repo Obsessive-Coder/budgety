@@ -25,7 +25,7 @@ export const newPasswordConfirmSchema = yup.string()
 export const transactionSchema = yup.object().shape({
     typeId: yup.string().required('* Required Field').notOneOf(['-- select one --'], '* Required Field'),
     categoryId: yup.string().required('* Required Field').notOneOf(['-- select one --'], '* Required Field'),
-    amount: yup.number().required('* Required Field'),
+    amount: yup.number().required('* Required Field').moreThan(0),
     accountId: yup.string().required('* Required Field').notOneOf(['-- select one --'], '* Required Field'),
     date: yup.date().required('* Required Field'),
     time: yup.string().required('* Required Field'),
