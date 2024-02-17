@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react';
+import React, { useState } from 'react';
 
 // Form Validation.
 import * as formik from 'formik';
@@ -24,14 +24,14 @@ const Option = ({ labelText, ...props }) => {
     );
 };
 
-const FormGroup = ({ labelText, controlType, controlProps, errorText, items = [] }) => {
+const FormGroup = ({ labelText, controlType, controlProps, errorText, items = [], isDisabled = false }) => {
     const spacelessLabelText = removeWhitespace(labelText);
 
     return (
         <Form.Group controlId={`form${spacelessLabelText}`}  className="m-2 flex-basis-100">
             <FloatingLabel controlId={`floating${spacelessLabelText}`} label={labelText} className="text-capitalize">
                 {controlType === 'select' && (
-                    <Form.Select size="sm" className="text-capitalize" {...controlProps}>
+                    <Form.Select size="sm" className="text-capitalize" {...controlProps} disabled={isDisabled}>
                         <option value={null}>-- select one --</option>
 
                         {items.map(({ id, definition, items = [] }) => (
@@ -53,7 +53,7 @@ const FormGroup = ({ labelText, controlType, controlProps, errorText, items = []
                 )}
 
                 {controlType === 'control' && (
-                    <Form.Control size="sm" {...controlProps} />
+                    <Form.Control size="sm" {...controlProps}  disabled={isDisabled} />
                 )}
 
                 <Form.Control.Feedback type="invalid" style={{ overflowWrap: 'break-word' }} className="text-start">
@@ -66,14 +66,32 @@ const FormGroup = ({ labelText, controlType, controlProps, errorText, items = []
 
 const AddTransactionForm = ({ isEditing = false, editingItemData, handleAddTransaction, handleUpdateTransaction, handleCloseSidebar }) => {
   const { transactionTypes: typeIds, transactionCategories: categoryIds, accountTypes: accountIds } = UserTransactions();
+  const [selectItemsData, setSelectedItemsData] = useState({ typeIds, categoryIds, accountIds });
   const { Formik } = formik;
-
-  const selectItemsData = { typeIds, categoryIds, accountIds };
 
   const initialValues = formGroups
     .map((items) => items.map(({ controlProps: { name } }) => name))
     .flat()
     .reduce((prev, key) => ({ ...prev, [key]: isEditing ? editingItemData[key] : '' }), {});
+
+  const handleOnChange = (event, callback) => {
+    const { value, name } = event.currentTarget;
+
+    const isRefund = typeIds.filter(({ id, definition }) => id === value && definition === 'refund').length > 0;
+    const [{ id: expenseTypeId }] = typeIds.filter(({ definition }) => definition === 'expense');
+    const categories = categoryIds.filter(({ transactionTypeId }) => isRefund ? transactionTypeId === expenseTypeId : transactionTypeId === value);
+    
+    if (name === 'typeId') {
+        setSelectedItemsData({
+            ...selectItemsData,
+            categoryIds: categories
+        })
+    }
+
+    if (callback) {
+        callback(event)
+    }
+}
 
   return (
     <Formik
@@ -93,11 +111,12 @@ const AddTransactionForm = ({ isEditing = false, editingItemData, handleAddTrans
                                 controlType={controlType}
                                 items={selectItemsData[`${name}s`] || []}
                                 errorText={errors[name]}
+                                isDisabled={name === 'categoryId' && (!values.typeId || values.typeId === '-- select one --')}
                                 controlProps={{
                                     ...controlProps,
                                     name,
                                     value: values[name],
-                                    onChange: handleChange,
+                                    onChange: event => handleOnChange(event, handleChange),
                                     isInvalid: !!errors[name]
                                 }}
                             />
