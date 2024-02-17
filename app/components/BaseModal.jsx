@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react';
+import React, { useState } from 'react';
 
 // Bootstrap Components.
 import Button from 'react-bootstrap/Button';
@@ -22,7 +22,7 @@ const BaseModal = ({
     setIsOpen = () => null,
     handleConfirm = () => null,
     handleCloseModal = () => null,
-}) => {
+}) => { 
   const handleOpen = () => setIsOpen(true);
   const handleClose = () => {
     handleCloseModal();
@@ -30,9 +30,7 @@ const BaseModal = ({
   }
 
   const handleOnConfirm = () => {
-    if (confirmButtonForm) {
-      handleConfirm();
-    }
+    handleConfirm();
   };
 
   return (

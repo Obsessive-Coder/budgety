@@ -79,8 +79,6 @@ const AddTransactionForm = ({ isEditing = false, editingItemData, handleAddTrans
         });
     }, {});
 
-    console.log(new Date().toJSON().slice(0,10))
-
   const handleOnChange = (event, callback) => {
     const { value, name } = event.currentTarget;
 

@@ -11,6 +11,7 @@ import {
 } from 'react-bootstrap-icons';
 
 // Custom Components.
+import BaseModal from './BaseModal';
 import TableMenu from './TableMenu';
 
 // Custom Imports.

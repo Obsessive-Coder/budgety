@@ -23,7 +23,7 @@ const TransactionTable = ({ setEditingItemData }) => {
     setModifiedDocumentId
   } = UserTransactions();
   
-  const [sortData, setSortData] = useState({ orderField: 'date', isDesc: true});
+  const [sortData, setSortData] = useState({ orderField: 'date', isDesc: true });
   const { user } = UserAuth();
   if (!user) return null;
 
@@ -102,11 +102,7 @@ const TransactionTable = ({ setEditingItemData }) => {
 
 const TransactionsPage = () => {  
   const { user } = UserAuth();
-  const [editingItemData, _setEditingItemData] = useState(null);
-
-  const setEditingItemData = (x) => {
-    _setEditingItemData(x)
-  }
+  const [editingItemData, setEditingItemData] = useState(null);
 
   if (!user) return null;
 
