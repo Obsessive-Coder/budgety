@@ -11,16 +11,11 @@ import {
 } from 'react-bootstrap-icons';
 
 // Custom Components.
-import BaseModal from './BaseModal';
 import TableMenu from './TableMenu';
 
 // Custom Imports.
 import { camelToFlat } from '@/app/lib/helpers/global';
-
-const USDollar = new Intl.NumberFormat('en-US', {
-  style: 'currency',
-  currency: 'USD',
-});
+import { USDollar } from '@/app/lib/helpers/global';
 
 const BaseTable = (props) => {
   const {

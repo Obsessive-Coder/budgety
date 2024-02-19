@@ -17,7 +17,7 @@ import CategoriesDropdown from '../components/CategoriesDropdown';
 import { UserTransactions } from '@/app/lib/context/TransactionsContext';
 import { transactionSchema } from '@/app/lib/constants/yup';
 import { formGroups } from '@/app/lib/constants/transactions';
-import { removeWhitespace } from '@/app/lib/helpers/global';
+import { removeWhitespace, USDollar } from '@/app/lib/helpers/global';
 
 const Option = ({ labelText, ...props }) => {
     return (
@@ -63,7 +63,7 @@ const FormGroup = ({ labelText, controlType, controlProps, errorText, categories
 
 const AddTransactionForm = ({ isEditing = false, editingItemData, handleAddTransaction, handleUpdateTransaction, handleCloseSidebar }) => {
   const { transactionTypes: typeIds, transactionCategories: categoryIds, accountTypes: accountIds } = UserTransactions();
-  const [selectItemsData, setSelectedItemsData] = useState({ typeIds, categoryIds, accountIds });
+  const [selectItemsData, setSelectItemsData] = useState({ typeIds, categoryIds, accountIds });
 
   const initialValues = formGroups
     .map((items) => items.map(({ controlProps: { name } }) => name))
@@ -85,10 +85,11 @@ const AddTransactionForm = ({ isEditing = false, editingItemData, handleAddTrans
     }
     
     if (name === 'typeId') {
-        setSelectedItemsData({
-            ...selectItemsData,
-            categoryIds: categories
-        })
+        setSelectItemsData({ ...selectItemsData, categoryIds: categories });
+
+        if (isRefund) {
+
+        }
     }
 
     if (callback) {

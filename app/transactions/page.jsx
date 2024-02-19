@@ -11,6 +11,7 @@ import { UserAuth } from '@/app/lib/context/AuthContext';
 import { UserTransactions, TransactionsProvider } from '@/app/lib/context/TransactionsContext';
 import { transactionsColumnLabels } from '@/app/lib/constants/transactions';
 import { addDocument, deleteDocument } from '@/app/lib/firebase/firestore';
+import { USDollar } from '@/app/lib/helpers/global';
 
 const TransactionTable = ({ setEditingItemData }) => {
   const { 
@@ -90,7 +91,7 @@ const TransactionTable = ({ setEditingItemData }) => {
       <div className="d-flex justify-content-between h4">
         <span>Transactions: {transactions.length}</span>
         <span className={`${totalAmount < 0 ? 'text-danger' : 'text-success'}`}>
-          Total: ${totalAmount.toFixed(2)}
+          Total: {USDollar.format(totalAmount)}
         </span>
       </div>
 
