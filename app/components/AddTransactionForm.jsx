@@ -32,16 +32,18 @@ const FormGroup = ({ labelText, controlType, controlProps, errorText, categories
 
     return (
         <Form.Group controlId={`form${spacelessLabelText}`}  className="m-2 flex-basis-100">
-            {controlType === 'categories' ? (
+            {controlProps.name === 'categoryId' && (
                 <CategoriesDropdown items={items} isSmallImage={true} categories={categories} isDisabled={isDisabled} controlProps={controlProps} />
-            ) : (
+            )}
+
+            {controlType !== 'custom' && (
                 <FloatingLabel controlId={`floating${spacelessLabelText}`} label={labelText} className="text-capitalize">
                     {controlType === 'select' && (
                         <Form.Select size="sm" className="text-capitalize" {...controlProps} disabled={isDisabled}>
                             <option value={null}>-- select one --</option>
 
                             {items.map(({ id, definition, items = [] }) => (
-                               <Option key={`option-${spacelessLabelText}-${id}`} labelText={definition} value={id} />
+                            <Option key={`option-${spacelessLabelText}-${id}`} labelText={definition} value={id} />
                             ))}
                         </Form.Select>
                     )}

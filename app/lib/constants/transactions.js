@@ -8,13 +8,20 @@ export const formGroups = [[{
         'aria-label': 'Select transaction type'
     }
   }, {
+    labelText: 'account',
+    controlType: 'select',
+    controlProps: {
+        name: 'accountId',
+        'aria-label': 'Select an account type'
+    }
+  }], [{
     labelText: 'category',
-    controlType: 'categories',
+    controlType: 'custom',
     controlProps: {
         name: 'categoryId',
         'aria-label': 'Select a transaction category'
     }
-  }], [{
+  }, {
     labelText: 'amount',
     controlType: 'control',
     controlProps: {
@@ -25,12 +32,13 @@ export const formGroups = [[{
         step: '0.01',
         min: '0'
     }
-  }, {
-    labelText: 'account',
-    controlType: 'select',
+  }], [{
+    labelText: 'other party',
+    controlType: 'control',
     controlProps: {
-        name: 'accountId',
-        'aria-label': 'Select an account type'
+      name: 'otherParty',
+      'aria-label': 'Party who paid or received this transaction',
+      placeholder: 'Other Party'
     }
   }], [{
     labelText: 'date',
@@ -49,14 +57,6 @@ export const formGroups = [[{
         'aria-label': 'Enter a transaction time',
         type: 'time',
         placeholder: 'Enter a time'
-    }
-  }], [{
-    labelText: 'other party',
-    controlType: 'control',
-    controlProps: {
-      name: 'otherParty',
-      'aria-label': 'Party who paid or received this transaction',
-      placeholder: 'Other Party'
     }
   }], [{
     labelText: 'note',
