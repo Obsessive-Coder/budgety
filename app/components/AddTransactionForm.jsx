@@ -129,7 +129,7 @@ const AddTransactionForm = ({ isEditing = false, editingItemData, handleAddTrans
                 ))}
 
                 <div className="d-flex justify-content-end p-2">
-                    <Button variant="link" onClick={handleCloseSidebar}>
+                    <Button variant="link" onClick={handleCloseSidebar} className="text-danger">
                         Cancel
                     </Button>
 
