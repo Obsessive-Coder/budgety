@@ -59,19 +59,17 @@ const FormGroup = ({ labelText, controlType, controlProps, errorText, categories
     );
 };
 
-const AddTransactionForm = ({ isEditing = false, handleAddTransaction, handleUpdateTransaction, handleCloseSidebar }) => {
+const AddTransactionForm = ({ isEditing = false, editingItemData, handleAddTransaction, handleUpdateTransaction, handleCloseSidebar }) => {
   const { transactionTypes: typeIds, transactionCategories: categoryIds, accountTypes: accountIds } = UserTransactions();
   const [selectItemsData, setSelectedItemsData] = useState({ typeIds, categoryIds, accountIds });
 
   const initialValues = formGroups
     .map((items) => items.map(({ controlProps: { name } }) => name))
     .flat()
-    .reduce((prev, key) => {
-        return ({
-            ...prev,
-            [key]: key === 'date' ? new Date().toJSON().slice(0,10) : ''
-        });
-    }, {});
+    .reduce((prev, key) => ({
+        ...prev,
+        [key]: key === 'date' ? new Date().toJSON().slice(0, 10) : editingItemData ? editingItemData[key] : ''
+    }), {});
 
   const handleOnChange = (event, setFieldValue, callback) => {
     const { value, name } = event.currentTarget;
@@ -94,7 +92,7 @@ const AddTransactionForm = ({ isEditing = false, handleAddTransaction, handleUpd
     if (callback) {
         callback(event)
     }
-}
+  }
 
   return (
     <Formik
