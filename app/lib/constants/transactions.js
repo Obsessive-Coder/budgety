@@ -1,4 +1,4 @@
-export const transactionsColumnLabels = ['amount', 'categoryId', 'accountId', 'date', 'note'];
+export const transactionsColumnLabels = ['otherParty', 'amount', 'categoryId', 'accountId', 'date', 'note'];
 
 export const formGroups = [[{
     labelText: 'transaction type',
@@ -49,6 +49,14 @@ export const formGroups = [[{
         'aria-label': 'Enter a transaction time',
         type: 'time',
         placeholder: 'Enter a time'
+    }
+  }], [{
+    labelText: 'other party',
+    controlType: 'control',
+    controlProps: {
+      name: 'otherParty',
+      'aria-label': 'Party who paid or received this transaction',
+      placeholder: 'Other Party'
     }
   }], [{
     labelText: 'note',

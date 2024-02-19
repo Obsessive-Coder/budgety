@@ -93,17 +93,14 @@ const BaseTable = (props) => {
               {headLabels.map((dataKey, index) => (
                 <td
                   key={`item-data-${dataKey}-${item.id}`}
-                  className={`px-2 ${index === items.length - 1 ? '' : 'border'} ${dataKey === 'amount' ? 'text-end' : ''} ${item.id === modifiedDocumentId ? 'bg-success' : ''}`}
+                  className={`px-2 ${index === items.length - 1 ? '' : 'border'} ${index === 0 ? 'text-end' : ''} ${item.id === modifiedDocumentId ? 'bg-success' : ''}`}
                 >
                     {dataKey.includes('Id') ? (
                         getIdColumnText(dataKey, item[dataKey])
                     ) : (
                       <>
                         {dataKey === 'amount' ? (
-                          <>
-                          {getIsTransactionExpense(item.id) ? '-' : ''}
-                          {USDollar.format(item[dataKey])}
-                          </>
+                          `${getIsTransactionExpense(item.id) ? '-' : ''}${USDollar.format(item[dataKey])}`
                         ) : (
                           item[dataKey] 
                         )}

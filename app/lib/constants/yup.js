@@ -29,5 +29,6 @@ export const transactionSchema = yup.object().shape({
     accountId: yup.string().required('* Required Field').notOneOf(['-- select one --'], '* Required Field'),
     date: yup.date().required('* Required Field'),
     time: yup.string(),
+    otherParty: yup.string(),
     note: yup.string()
 });
