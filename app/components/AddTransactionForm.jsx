@@ -3,12 +3,15 @@
 import React, { useState } from 'react';
 
 // Form Validation.
-import * as formik from 'formik';
+import { Formik, useFieldjkm } from 'formik';
 
 // React Bootstrap Components.
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
+
+// Custom Components.
+import CategoriesDropdown from '../components/CategoriesDropdown';
 
 // Custom Imports.
 import { UserTransactions } from '@/app/lib/context/TransactionsContext';
@@ -24,50 +27,41 @@ const Option = ({ labelText, ...props }) => {
     );
 };
 
-const FormGroup = ({ labelText, controlType, controlProps, errorText, items = [], isDisabled = false }) => {
+const FormGroup = ({ labelText, controlType, controlProps, errorText, categories = [], items = [], isDisabled = false }) => {
     const spacelessLabelText = removeWhitespace(labelText);
 
     return (
         <Form.Group controlId={`form${spacelessLabelText}`}  className="m-2 flex-basis-100">
-            <FloatingLabel controlId={`floating${spacelessLabelText}`} label={labelText} className="text-capitalize">
-                {controlType === 'select' && (
-                    <Form.Select size="sm" className="text-capitalize" {...controlProps} disabled={isDisabled}>
-                        <option value={null}>-- select one --</option>
+            {controlType === 'categories' ? (
+                <CategoriesDropdown items={items} isSmallImage={true} categories={categories} isDisabled={isDisabled} controlProps={controlProps} />
+            ) : (
+                <FloatingLabel controlId={`floating${spacelessLabelText}`} label={labelText} className="text-capitalize">
+                    {controlType === 'select' && (
+                        <Form.Select size="sm" className="text-capitalize" {...controlProps} disabled={isDisabled}>
+                            <option value={null}>-- select one --</option>
 
-                        {items.map(({ id, definition, items = [] }) => (
-                            controlProps.name === 'categoryId' ? (
-                                <optgroup key={`group-${spacelessLabelText}-${id}`} label={definition}>
-                                    {items.map(({ id, definition }) => (
-                                        <Option
-                                            key={`option-${spacelessLabelText}-${id}`} 
-                                            labelText={definition}
-                                            value={id}
-                                        />
-                                    ))}
-                                </optgroup>
-                            ) : (
-                                <Option key={`option-${spacelessLabelText}-${id}`} labelText={definition} value={id} />
-                            )
-                        ))}
-                    </Form.Select>
-                )}
+                            {items.map(({ id, definition, items = [] }) => (
+                               <Option key={`option-${spacelessLabelText}-${id}`} labelText={definition} value={id} />
+                            ))}
+                        </Form.Select>
+                    )}
 
-                {controlType === 'control' && (
-                    <Form.Control size="sm" {...controlProps}  disabled={isDisabled} />
-                )}
+                    {controlType === 'control' && (
+                        <Form.Control size="sm" {...controlProps}  disabled={isDisabled} />
+                    )}
 
-                <Form.Control.Feedback type="invalid" style={{ overflowWrap: 'break-word' }} className="text-start">
-                    {errorText}
-                </Form.Control.Feedback>
-            </FloatingLabel>
+                    <Form.Control.Feedback type="invalid" style={{ overflowWrap: 'break-word' }} className="text-start">
+                        {errorText}
+                    </Form.Control.Feedback>
+                </FloatingLabel>
+            )}
         </Form.Group>
     );
 };
 
-const AddTransactionForm = ({ isEditing = false, editingItemData, handleAddTransaction, handleUpdateTransaction, handleCloseSidebar }) => {
+const AddTransactionForm = ({ isEditing = false, handleAddTransaction, handleUpdateTransaction, handleCloseSidebar }) => {
   const { transactionTypes: typeIds, transactionCategories: categoryIds, accountTypes: accountIds } = UserTransactions();
   const [selectItemsData, setSelectedItemsData] = useState({ typeIds, categoryIds, accountIds });
-  const { Formik } = formik;
 
   const initialValues = formGroups
     .map((items) => items.map(({ controlProps: { name } }) => name))
@@ -79,12 +73,16 @@ const AddTransactionForm = ({ isEditing = false, editingItemData, handleAddTrans
         });
     }, {});
 
-  const handleOnChange = (event, callback) => {
+  const handleOnChange = (event, setFieldValue, callback) => {
     const { value, name } = event.currentTarget;
 
     const isRefund = typeIds.filter(({ id, definition }) => id === value && definition === 'refund').length > 0;
     const [{ id: expenseTypeId }] = typeIds.filter(({ definition }) => definition === 'expense');
     const categories = categoryIds.filter(({ transactionTypeId }) => isRefund ? transactionTypeId === expenseTypeId : transactionTypeId === value);
+
+    if (name === 'categoryId' && value) {
+        setFieldValue(name, value, true);
+    }
     
     if (name === 'typeId') {
         setSelectedItemsData({
@@ -105,7 +103,7 @@ const AddTransactionForm = ({ isEditing = false, editingItemData, handleAddTrans
         initialValues={initialValues}
         validateOnChange={false}
       >
-        {({ handleSubmit, handleChange, values, touched, errors }) => (
+        {({ handleSubmit, handleChange, values, touched, errors, setFieldValue }) => (
             <Form noValidate onSubmit={handleSubmit}>
                 {formGroups.map((items, index) => (
                     <div key={`form-groups-${index}`} className="d-flex">
@@ -116,12 +114,13 @@ const AddTransactionForm = ({ isEditing = false, editingItemData, handleAddTrans
                                 controlType={controlType}
                                 items={selectItemsData[`${name}s`] || []}
                                 errorText={errors[name]}
+                                categories={categoryIds}
                                 isDisabled={name === 'categoryId' && (!values.typeId || values.typeId === '-- select one --')}
                                 controlProps={{
                                     ...controlProps,
                                     name,
                                     value: values[name],
-                                    onChange: event => handleOnChange(event, handleChange),
+                                    onChange: event => handleOnChange(event, setFieldValue, handleChange),
                                     isInvalid: !!errors[name]
                                 }}
                             />
