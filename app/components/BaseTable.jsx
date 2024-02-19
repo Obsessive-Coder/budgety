@@ -100,7 +100,10 @@ const BaseTable = (props) => {
                     ) : (
                       <>
                         {dataKey === 'amount' ? (
-                          USDollar.format(item[dataKey])
+                          <>
+                          {getIsTransactionExpense(item.id) ? '-' : ''}
+                          {USDollar.format(item[dataKey])}
+                          </>
                         ) : (
                           item[dataKey] 
                         )}
