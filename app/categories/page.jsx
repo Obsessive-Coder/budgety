@@ -19,7 +19,7 @@ const CategoriesPage = () => {
 
         <section className="d-flex">
             <TransactionsProvider>
-                <CategoryList />
+              <CategoryList />
             </TransactionsProvider>
         </section>
     </section>

@@ -9,7 +9,7 @@ export const formGroups = [[{
     }
   }, {
     labelText: 'category',
-    controlType: 'select',
+    controlType: 'categories',
     controlProps: {
         name: 'categoryId',
         'aria-label': 'Select a transaction category'

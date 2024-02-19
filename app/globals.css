@@ -18,9 +18,19 @@
   flex-basis: 100%;
 }
 
-.category-image {
+.category-image.max-36 {
+  max-width: 36px;
+  height: auto;
+}
+
+.category-image.max-48 {
   max-width: 48px;
   height: auto;
+}
+
+.categories-dropdown .dropdown-toggle {
+  width: 100%;
+  height: 100%;
 }
 
 /* :root {
