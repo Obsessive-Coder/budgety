@@ -11,6 +11,7 @@ import { UserAuth } from '@/app/lib/context/AuthContext';
 import { UserTransactions, TransactionsProvider } from '@/app/lib/context/TransactionsContext';
 import { transactionsColumnLabels } from '@/app/lib/constants/transactions';
 import { addDocument, deleteDocument } from '@/app/lib/firebase/firestore';
+import { USDollar } from '@/app/lib/helpers/global';
 
 const TransactionTable = ({ setEditingItemData }) => {
   const { 
@@ -81,22 +82,32 @@ const TransactionTable = ({ setEditingItemData }) => {
       default:
         break;
     }
-
   }
 
+  const totalAmount = transactions.reduce((prev, { id, amount }) => prev += getIsTransactionExpense(id) ? -amount : amount, 0);
+
   return (
-    <BaseTable
-      items={transactions}
-      headLabels={transactionsColumnLabels}
-      getIsTransactionExpense={getIsTransactionExpense}
-      modifiedDocumentId={modifiedDocumentId}
-      sortData={sortData}
-      getIdColumnText={getIdColumnText}
-      handleSort={toggleSortData}
-      handleMenuItemOnClick={handleMenuItemOnClick}
-      tableClassName="flex-fill"
-      bodyClassName="text-capitalize"
-    />
+    <div>
+      <div className="d-flex justify-content-between h4">
+        <span>Transactions: {transactions.length}</span>
+        <span className={`${totalAmount < 0 ? 'text-danger' : 'text-success'}`}>
+          Total: {USDollar.format(totalAmount)}
+        </span>
+      </div>
+
+      <BaseTable
+        items={transactions}
+        headLabels={transactionsColumnLabels}
+        getIsTransactionExpense={getIsTransactionExpense}
+        modifiedDocumentId={modifiedDocumentId}
+        sortData={sortData}
+        getIdColumnText={getIdColumnText}
+        handleSort={toggleSortData}
+        handleMenuItemOnClick={handleMenuItemOnClick}
+        tableClassName="flex-fill"
+        bodyClassName="text-capitalize"
+      />
+    </div>
   );
 };
 

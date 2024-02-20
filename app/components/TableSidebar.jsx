@@ -13,8 +13,8 @@ import { UserTransactions } from '@/app/lib/context/TransactionsContext';
 
 const buttonProps = {
   label: 'New Transaction',
-  variant: 'primary',
-  className: '',
+  variant: 'outline-success',
+  className: 'd-block mx-auto my-3',
 };
 
 const headerProps = { label: 'New Transaction' };

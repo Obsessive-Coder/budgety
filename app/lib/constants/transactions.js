@@ -1,4 +1,4 @@
-export const transactionsColumnLabels = ['amount', 'categoryId', 'accountId', 'date', 'note'];
+export const transactionsColumnLabels = ['otherParty', 'amount', 'categoryId', 'accountId', 'date', 'note'];
 
 export const formGroups = [[{
     labelText: 'transaction type',
@@ -8,13 +8,20 @@ export const formGroups = [[{
         'aria-label': 'Select transaction type'
     }
   }, {
+    labelText: 'account',
+    controlType: 'select',
+    controlProps: {
+        name: 'accountId',
+        'aria-label': 'Select an account type'
+    }
+  }], [{
     labelText: 'category',
-    controlType: 'categories',
+    controlType: 'custom',
     controlProps: {
         name: 'categoryId',
         'aria-label': 'Select a transaction category'
     }
-  }], [{
+  }, {
     labelText: 'amount',
     controlType: 'control',
     controlProps: {
@@ -25,12 +32,13 @@ export const formGroups = [[{
         step: '0.01',
         min: '0'
     }
-  }, {
-    labelText: 'account',
-    controlType: 'select',
+  }], [{
+    labelText: 'other party',
+    controlType: 'control',
     controlProps: {
-        name: 'accountId',
-        'aria-label': 'Select an account type'
+      name: 'otherParty',
+      'aria-label': 'Party who paid or received this transaction',
+      placeholder: 'Other Party'
     }
   }], [{
     labelText: 'date',

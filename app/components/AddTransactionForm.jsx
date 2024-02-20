@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 
 // Form Validation.
-import { Formik, useFieldjkm } from 'formik';
+import { Formik } from 'formik';
 
 // React Bootstrap Components.
 import Button from 'react-bootstrap/Button';
@@ -17,7 +17,7 @@ import CategoriesDropdown from '../components/CategoriesDropdown';
 import { UserTransactions } from '@/app/lib/context/TransactionsContext';
 import { transactionSchema } from '@/app/lib/constants/yup';
 import { formGroups } from '@/app/lib/constants/transactions';
-import { removeWhitespace } from '@/app/lib/helpers/global';
+import { removeWhitespace, USDollar } from '@/app/lib/helpers/global';
 
 const Option = ({ labelText, ...props }) => {
     return (
@@ -32,16 +32,18 @@ const FormGroup = ({ labelText, controlType, controlProps, errorText, categories
 
     return (
         <Form.Group controlId={`form${spacelessLabelText}`}  className="m-2 flex-basis-100">
-            {controlType === 'categories' ? (
+            {controlProps.name === 'categoryId' && (
                 <CategoriesDropdown items={items} isSmallImage={true} categories={categories} isDisabled={isDisabled} controlProps={controlProps} />
-            ) : (
+            )}
+
+            {controlType !== 'custom' && (
                 <FloatingLabel controlId={`floating${spacelessLabelText}`} label={labelText} className="text-capitalize">
                     {controlType === 'select' && (
                         <Form.Select size="sm" className="text-capitalize" {...controlProps} disabled={isDisabled}>
                             <option value={null}>-- select one --</option>
 
                             {items.map(({ id, definition, items = [] }) => (
-                               <Option key={`option-${spacelessLabelText}-${id}`} labelText={definition} value={id} />
+                            <Option key={`option-${spacelessLabelText}-${id}`} labelText={definition} value={id} />
                             ))}
                         </Form.Select>
                     )}
@@ -59,19 +61,17 @@ const FormGroup = ({ labelText, controlType, controlProps, errorText, categories
     );
 };
 
-const AddTransactionForm = ({ isEditing = false, handleAddTransaction, handleUpdateTransaction, handleCloseSidebar }) => {
+const AddTransactionForm = ({ isEditing = false, editingItemData, handleAddTransaction, handleUpdateTransaction, handleCloseSidebar }) => {
   const { transactionTypes: typeIds, transactionCategories: categoryIds, accountTypes: accountIds } = UserTransactions();
-  const [selectItemsData, setSelectedItemsData] = useState({ typeIds, categoryIds, accountIds });
+  const [selectItemsData, setSelectItemsData] = useState({ typeIds, categoryIds, accountIds });
 
   const initialValues = formGroups
     .map((items) => items.map(({ controlProps: { name } }) => name))
     .flat()
-    .reduce((prev, key) => {
-        return ({
-            ...prev,
-            [key]: key === 'date' ? new Date().toJSON().slice(0,10) : ''
-        });
-    }, {});
+    .reduce((prev, key) => ({
+        ...prev,
+        [key]: key === 'date' ? new Date().toJSON().slice(0, 10) : editingItemData ? editingItemData[key] : ''
+    }), {});
 
   const handleOnChange = (event, setFieldValue, callback) => {
     const { value, name } = event.currentTarget;
@@ -85,16 +85,17 @@ const AddTransactionForm = ({ isEditing = false, handleAddTransaction, handleUpd
     }
     
     if (name === 'typeId') {
-        setSelectedItemsData({
-            ...selectItemsData,
-            categoryIds: categories
-        })
+        setSelectItemsData({ ...selectItemsData, categoryIds: categories });
+
+        if (isRefund) {
+
+        }
     }
 
     if (callback) {
         callback(event)
     }
-}
+  }
 
   return (
     <Formik
@@ -129,7 +130,7 @@ const AddTransactionForm = ({ isEditing = false, handleAddTransaction, handleUpd
                 ))}
 
                 <div className="d-flex justify-content-end p-2">
-                    <Button variant="link" onClick={handleCloseSidebar}>
+                    <Button variant="link" onClick={handleCloseSidebar} className="text-danger">
                         Cancel
                     </Button>
 

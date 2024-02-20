@@ -11,16 +11,11 @@ import {
 } from 'react-bootstrap-icons';
 
 // Custom Components.
-import BaseModal from './BaseModal';
 import TableMenu from './TableMenu';
 
 // Custom Imports.
 import { camelToFlat } from '@/app/lib/helpers/global';
-
-const USDollar = new Intl.NumberFormat('en-US', {
-  style: 'currency',
-  currency: 'USD',
-});
+import { USDollar } from '@/app/lib/helpers/global';
 
 const BaseTable = (props) => {
   const {
@@ -93,14 +88,14 @@ const BaseTable = (props) => {
               {headLabels.map((dataKey, index) => (
                 <td
                   key={`item-data-${dataKey}-${item.id}`}
-                  className={`px-2 ${index === items.length - 1 ? '' : 'border'} ${dataKey === 'amount' ? 'text-end' : ''} ${item.id === modifiedDocumentId ? 'bg-success' : ''}`}
+                  className={`px-2 ${index === items.length - 1 ? '' : 'border'} ${index === 0 ? 'text-end' : ''} ${item.id === modifiedDocumentId ? 'bg-success' : ''}`}
                 >
                     {dataKey.includes('Id') ? (
                         getIdColumnText(dataKey, item[dataKey])
                     ) : (
                       <>
                         {dataKey === 'amount' ? (
-                          USDollar.format(item[dataKey])
+                          `${getIsTransactionExpense(item.id) ? '-' : ''}${USDollar.format(item[dataKey])}`
                         ) : (
                           item[dataKey] 
                         )}
