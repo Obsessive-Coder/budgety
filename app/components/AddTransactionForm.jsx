@@ -43,7 +43,7 @@ const FormGroup = ({ labelText, controlType, controlProps, errorText, categories
                             <option value={null}>-- select one --</option>
 
                             {items.map(({ id, definition, items = [] }) => (
-                            <Option key={`option-${spacelessLabelText}-${id}`} labelText={definition} value={id} />
+                                <Option key={`option-${spacelessLabelText}-${id}`} labelText={definition} value={id} />
                             ))}
                         </Form.Select>
                     )}

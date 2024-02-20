@@ -9,9 +9,7 @@ import CategoryList from './CategoryList';
 
 // eslint-disable-next-line react/display-name
 const CustomMenu = React.forwardRef(
-    ({ children, style, className, 'aria-labelledby': labeledBy }, ref) => {
-      const [filterValue, setFilterValue] = useState('');
-  
+    ({ children, style, filterValue, setFilterValue, className, 'aria-labelledby': labeledBy }, ref) => {  
       return (
         <div
           ref={ref}
@@ -27,18 +25,29 @@ const CustomMenu = React.forwardRef(
             onChange={(e) => setFilterValue(e.target.value)}
             value={filterValue}
           />
-
-          {children}
+            {children}
         </div>
       );
     },
   );
 
 const CategoriesDropdown = ({ items = [], isSmallImage = false, categories = [], isDisabled, controlProps }) => {
+  const [filterValue, setFilterValue] = useState('');
+
+  const filteredItems = items
+    .filter(({ items: subItems }) => !filterValue || subItems.filter(({ definition }) => definition.toLowerCase().startsWith(filterValue)).length > 0)
+    .map(({ items: subItems = [], ...item }) => {
+      const filteredSubItems = subItems.filter(({ definition }) => definition.toLowerCase().startsWith(filterValue));
+      return filterValue ? filteredSubItems : { ...item, items: filteredSubItems }
+    })
+    .flat();
+
   const { items: subcategories = [] }  = categories
     .filter(({ items = [] }) => items.filter(({ id }) => id === controlProps.value).length > 0)[0] ?? {};
 
   const { definition: toggleText = '-- select one --' } = subcategories.filter(({ id }) => id === controlProps.value)[0] ?? {};
+
+  console.log(filteredItems)
 
   return (
     <Dropdown className="h-100">
@@ -51,8 +60,8 @@ const CategoriesDropdown = ({ items = [], isSmallImage = false, categories = [],
             {toggleText}
         </Dropdown.Toggle>
 
-        <Dropdown.Menu as={CustomMenu} className="overflow-auto" style={{ maxHeight: 420 }}>
-            <CategoryList isSmallImage={isSmallImage} mainItems={items} handleItemOnClick={controlProps.onChange} />
+        <Dropdown.Menu as={CustomMenu} filterValue={filterValue} setFilterValue={setFilterValue} className="overflow-auto" style={{ maxHeight: 420 }}>
+            <CategoryList isSmallImage={isSmallImage} mainItems={filteredItems} isFiltered={!!filterValue} handleItemOnClick={controlProps.onChange} />
         </Dropdown.Menu>
     </Dropdown>
   )
