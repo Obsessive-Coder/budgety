@@ -81,7 +81,8 @@ const AddTransactionForm = ({ isEditing = false, editingItemData, handleAddTrans
     const categories = categoryIds.filter(({ transactionTypeId }) => isRefund ? transactionTypeId === expenseTypeId : transactionTypeId === value);
 
     if (name === 'categoryId' && value) {
-        setFieldValue(name, value, true);
+        console.log('HERE: ', value)
+        setFieldValue(name, value, false);
     }
     
     if (name === 'typeId') {
@@ -105,7 +106,7 @@ const AddTransactionForm = ({ isEditing = false, editingItemData, handleAddTrans
         validateOnChange={false}
       >
         {({ handleSubmit, handleChange, values, touched, errors, setFieldValue }) => (
-            <Form noValidate onSubmit={handleSubmit}>
+            <Form noValidate id="transaction-form" onSubmit={handleSubmit}>
                 {formGroups.map((items, index) => (
                     <div key={`form-groups-${index}`} className="d-flex">
                         {items.map(({ labelText, controlType, controlProps: { name, ...controlProps } }) => (

@@ -52,16 +52,15 @@ const CategoryList = ({ isSmallImage = false, mainItems = [], isFiltered = false
                         <ListGroup.Item 
                             action
                             key={`child-item-${name}`}
-                            type="button"
                             name="categoryId"
+                            id="categoryId"
+                            type="button"
                             value={categoryId}
                             onClick={handleItemOnClick}
-                            className="border-0 text-capitalize"
+                            className="d-flex align-items-center border-0 text-capitalize"
                         >
-                            <div className="d-flex align-items-center">
-                                <CategoryImage src={imageUrl} isSmallImage={isSmallImage} />
-                                <p className="flex-fill my-0 mx-3">{name}</p>
-                            </div>
+                            <CategoryImage src={imageUrl} isSmallImage={isSmallImage} style={{ pointerEvents: 'none' }} />
+                            <p className="flex-fill my-0 mx-3" style={{ pointerEvents: 'none' }}>{name}</p>
                         </ListGroup.Item>
                     ))}
                 </ListGroup>

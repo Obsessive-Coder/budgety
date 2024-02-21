@@ -34,20 +34,33 @@ const CustomMenu = React.forwardRef(
 const CategoriesDropdown = ({ items = [], isSmallImage = false, categories = [], isDisabled, controlProps }) => {
   const [filterValue, setFilterValue] = useState('');
 
-  const filteredItems = items
-    .filter(({ items: subItems }) => !filterValue || subItems.filter(({ definition }) => definition.toLowerCase().startsWith(filterValue)).length > 0)
-    .map(({ items: subItems = [], ...item }) => {
-      const filteredSubItems = subItems.filter(({ definition }) => definition.toLowerCase().startsWith(filterValue));
-      return filterValue ? filteredSubItems : { ...item, items: filteredSubItems }
-    })
-    .flat();
+  let filteredItems = [];
+  if (filterValue) {
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+      const { items: subItems = [], definition } = item;
+  
+      if (definition.toLowerCase().startsWith(filterValue)) {
+        filteredItems.push(item)
+      }
+  
+      filteredItems.push(...subItems.filter(({ definition }) => definition.toLowerCase().startsWith(filterValue)));
+    }
+  } else {
+    filteredItems = items.map(item => ({
+      ...item,
+      items: [{ ...item }, ...item.items]
+    }))
+  }
 
-  const { items: subcategories = [] }  = categories
-    .filter(({ items = [] }) => items.filter(({ id }) => id === controlProps.value).length > 0)[0] ?? {};
+  const { items: subcategories = [], ...item }  = categories
+    .filter(({ id, items = [] }) => {
+      return (
+        id === controlProps.value || items.filter(({ id }) => id === controlProps.value).length > 0
+      )
+    })[0] ?? {};
 
-  const { definition: toggleText = '-- select one --' } = subcategories.filter(({ id }) => id === controlProps.value)[0] ?? {};
-
-  console.log(filteredItems)
+  const { definition: toggleText = '-- select one --' } = [item, ...subcategories].filter(({ id }) => id === controlProps.value)[0] ?? {};
 
   return (
     <Dropdown className="h-100">

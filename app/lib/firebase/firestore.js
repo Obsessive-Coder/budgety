@@ -44,7 +44,9 @@ export async function getDocsByUserId(collectionName, userId, orderField, isDesc
         );
 
         const querySnapshot = await getDocs(q);
-        return querySnapshot.docs.map((document) => ({id: document.id, ...document.data()}));
+        const x = querySnapshot.docs.map((document) => ({id: document.id, ...document.data()}));
+        console.log('HERE: ', x);
+        return x
     } catch ({ code, message }) {
         console.error(code, message);
     }
