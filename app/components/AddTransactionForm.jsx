@@ -27,11 +27,6 @@ const Option = ({ labelText, ...props }) => {
     );
 };
 
-// eslint-disable-next-line react/display-name
-const CustomDropdown = React.forwardRef((props) => (
-    <CategoriesDropdown {...props} />
-));
-
 const FormGroup = ({ labelText, controlType, controlProps, errorText, categories = [], items = [], isDisabled = false }) => {
     const spacelessLabelText = removeWhitespace(labelText);
 
@@ -41,7 +36,8 @@ const FormGroup = ({ labelText, controlType, controlProps, errorText, categories
                 <Form.Control
                     size="sm"
                     disabled={isDisabled}
-                    as={CustomDropdown}
+                    // eslint-disable-next-line react/display-name
+                    as={React.forwardRef((props) => <CategoriesDropdown {...props} />)}
                     items={items}
                     categories={categories}
                     isSmallImage={true}
