@@ -49,15 +49,6 @@ const FormGroup = ({ labelText, controlType, controlProps, errorText, categories
                     isDisabled={isDisabled}
                     controlProps={controlProps}
                 />
-
-                // <CategoriesDropdown
-                //     items={items}
-                //     categories={categories}
-                //     isSmallImage={true}
-                //     errorText={errorText}
-                //     isDisabled={isDisabled}
-                //     controlProps={controlProps}
-                // />
             )}
 
             {controlType !== 'custom' && (
