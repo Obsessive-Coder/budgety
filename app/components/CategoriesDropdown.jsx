@@ -31,7 +31,7 @@ const CustomMenu = React.forwardRef(
     },
   );
 
-const CategoriesDropdown = ({ items = [], isSmallImage = false, categories = [], isDisabled, controlProps }) => {
+const CategoriesDropdown = ({ items = [], isSmallImage = false, categories = [], isDisabled, controlProps, errorText }) => {
   const [filterValue, setFilterValue] = useState('');
 
   let filteredItems = [];
@@ -63,20 +63,26 @@ const CategoriesDropdown = ({ items = [], isSmallImage = false, categories = [],
   const { definition: toggleText = '-- select one --' } = [item, ...subcategories].filter(({ id }) => id === controlProps.value)[0] ?? {};
 
   return (
-    <Dropdown className="h-100">
+    <div className="d-flex flex-column h-100">
+      <Dropdown className="flex-basis-100 custom-form-control">
         <Dropdown.Toggle
-            variant="outline-secondary"
-            id="categories-dropdown"
-            disabled={isDisabled}
-            className="w-100 h-100 text-body text-capitalize justify-content-between d-flex align-items-center"
+          variant="outline-secondary"
+          id="categories-dropdown"
+          disabled={isDisabled}
+          className="w-100 h-100 text-body text-capitalize justify-content-between d-flex align-items-center"
         >
-            {toggleText}
+          {toggleText}
         </Dropdown.Toggle>
 
         <Dropdown.Menu as={CustomMenu} filterValue={filterValue} setFilterValue={setFilterValue} className="overflow-auto" style={{ maxHeight: 420 }}>
-            <CategoryList isSmallImage={isSmallImage} mainItems={filteredItems} isFiltered={!!filterValue} handleItemOnClick={controlProps.onChange} />
+          <CategoryList isSmallImage={isSmallImage} mainItems={filteredItems} isFiltered={!!filterValue} handleItemOnClick={controlProps.onChange} />
         </Dropdown.Menu>
-    </Dropdown>
+      </Dropdown>
+
+      <Form.Control.Feedback type="invalid" style={{ overflowWrap: 'break-word' }} className="d-block text-start">
+        {errorText}
+      </Form.Control.Feedback>
+    </div>
   )
 }
 
