@@ -15,7 +15,7 @@ const CategoryImage = ({ isSmallImage = false, ...props }) => {
     return <Image {...props} roundedCircle alt="Category Image" className={`category-image ${isSmallImage ? 'max-36' : 'max-48'}`} />
 };
 
-const ParentListItem = ({ children, name, imageUrl, isSmallImage }) => {
+const ParentListItem = ({ children, name, imageUrl, isFiltered = false, isSmallImage = false }) => {
     const [isOpen, setIsOpen] = useState(false);
     const toggleIsOpen = () => setIsOpen(!isOpen);
 
@@ -30,8 +30,9 @@ const ParentListItem = ({ children, name, imageUrl, isSmallImage }) => {
         >
             <div className="d-flex align-items-center justify-content-between">
                 <CategoryImage src={imageUrl} isSmallImage={isSmallImage} />
-                <p className="my-0 mx-3">{name}</p>
-                <ArrowsIcon size={18} />
+                <p className="flex-fill my-0 mx-3">{name}</p>
+
+                {!isFiltered && <ArrowsIcon size={18} />}
             </div>
 
             <Collapse in={isOpen}>
@@ -41,26 +42,25 @@ const ParentListItem = ({ children, name, imageUrl, isSmallImage }) => {
     );
 };
 
-const CategoryList = ({ isSmallImage = false, mainItems = [], handleItemOnClick = () => null }) => {
+const CategoryList = ({ isSmallImage = false, mainItems = [], isFiltered = false, handleItemOnClick = () => null }) => {
   return (
     <ListGroup variant="flush">
         {mainItems.map(({ definition: parentName, items = [], imageUrl: parentImageUrl }) => (
-            <ParentListItem key={`parent-item-${parentName}`} name={parentName} imageUrl={parentImageUrl} isSmallImage={isSmallImage}>
+            <ParentListItem key={`parent-item-${parentName}`} name={parentName} imageUrl={parentImageUrl} isFiltered={isFiltered} isSmallImage={isSmallImage}>
                 <ListGroup variant="flush" id={`category-list-${parentName}`}>
                     {items.map(({ id: categoryId, definition: name, imageUrl }) => (
                         <ListGroup.Item 
                             action
                             key={`child-item-${name}`}
-                            type="button"
                             name="categoryId"
+                            id="categoryId"
+                            type="button"
                             value={categoryId}
                             onClick={handleItemOnClick}
-                            className="border-0 text-capitalize"
+                            className="d-flex align-items-center border-0 text-capitalize"
                         >
-                            <div className="d-flex align-items-center">
-                                <CategoryImage src={imageUrl} isSmallImage={isSmallImage} />
-                                <p className="my-0 mx-3">{name}</p>
-                            </div>
+                            <CategoryImage src={imageUrl} isSmallImage={isSmallImage} style={{ pointerEvents: 'none' }} />
+                            <p className="flex-fill my-0 mx-3" style={{ pointerEvents: 'none' }}>{name}</p>
                         </ListGroup.Item>
                     ))}
                 </ListGroup>

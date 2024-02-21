@@ -9,9 +9,7 @@ import CategoryList from './CategoryList';
 
 // eslint-disable-next-line react/display-name
 const CustomMenu = React.forwardRef(
-    ({ children, style, className, 'aria-labelledby': labeledBy }, ref) => {
-      const [filterValue, setFilterValue] = useState('');
-  
+    ({ children, style, filterValue, setFilterValue, className, 'aria-labelledby': labeledBy }, ref) => {  
       return (
         <div
           ref={ref}
@@ -27,34 +25,64 @@ const CustomMenu = React.forwardRef(
             onChange={(e) => setFilterValue(e.target.value)}
             value={filterValue}
           />
-
-          {children}
+            {children}
         </div>
       );
     },
   );
 
-const CategoriesDropdown = ({ items = [], isSmallImage = false, categories = [], isDisabled, controlProps }) => {
-  const { items: subcategories = [] }  = categories
-    .filter(({ items = [] }) => items.filter(({ id }) => id === controlProps.value).length > 0)[0] ?? {};
+const CategoriesDropdown = ({ items = [], isSmallImage = false, categories = [], isDisabled, controlProps, errorText }) => {
+  const [filterValue, setFilterValue] = useState('');
 
-  const { definition: toggleText = '-- select one --' } = subcategories.filter(({ id }) => id === controlProps.value)[0] ?? {};
+  let filteredItems = [];
+  if (filterValue) {
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+      const { items: subItems = [], definition } = item;
+  
+      if (definition.toLowerCase().startsWith(filterValue)) {
+        filteredItems.push(item)
+      }
+  
+      filteredItems.push(...subItems.filter(({ definition }) => definition.toLowerCase().startsWith(filterValue)));
+    }
+  } else {
+    filteredItems = items.map(item => ({
+      ...item,
+      items: [{ ...item }, ...item.items]
+    }))
+  }
+
+  const { items: subcategories = [], ...item }  = categories
+    .filter(({ id, items = [] }) => {
+      return (
+        id === controlProps.value || items.filter(({ id }) => id === controlProps.value).length > 0
+      )
+    })[0] ?? {};
+
+  const { definition: toggleText = '-- select one --' } = [item, ...subcategories].filter(({ id }) => id === controlProps.value)[0] ?? {};
 
   return (
-    <Dropdown className="h-100">
+    <div className="d-flex flex-column h-100">
+      <Dropdown className="flex-basis-100 custom-form-control">
         <Dropdown.Toggle
-            variant="outline-secondary"
-            id="categories-dropdown"
-            disabled={isDisabled}
-            className="w-100 h-100 text-body text-capitalize justify-content-between d-flex align-items-center"
+          variant="outline-secondary"
+          id="categories-dropdown"
+          disabled={isDisabled}
+          className="w-100 h-100 text-body text-capitalize justify-content-between d-flex align-items-center"
         >
-            {toggleText}
+          {toggleText}
         </Dropdown.Toggle>
 
-        <Dropdown.Menu as={CustomMenu} className="overflow-auto" style={{ maxHeight: 420 }}>
-            <CategoryList isSmallImage={isSmallImage} mainItems={items} handleItemOnClick={controlProps.onChange} />
+        <Dropdown.Menu as={CustomMenu} filterValue={filterValue} setFilterValue={setFilterValue} className="overflow-auto" style={{ maxHeight: 420 }}>
+          <CategoryList isSmallImage={isSmallImage} mainItems={filteredItems} isFiltered={!!filterValue} handleItemOnClick={controlProps.onChange} />
         </Dropdown.Menu>
-    </Dropdown>
+      </Dropdown>
+
+      <Form.Control.Feedback type="invalid" style={{ overflowWrap: 'break-word' }} className="d-block text-start">
+        {errorText}
+      </Form.Control.Feedback>
+    </div>
   )
 }
 

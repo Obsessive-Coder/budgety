@@ -46,34 +46,34 @@ export const TransactionsProvider = ({ children }) => {
     }
   }, [user.uid]);
 
-    useEffect(() => {
-      if (user) {
-        fetchLoaderData();
-      }
+  useEffect(() => {
+    if (user) {
+      fetchLoaderData();
+    }
 
-      const unsubscribe = () => onSnapshot(user.uid, 'transactions', querySnapshot => {
-        const snapshotTransactions = querySnapshot.docs.map(document => ({ ...document.data(), id: document.id }));
-        setTransactions(snapshotTransactions);
-      });
-      
-      return () => unsubscribe();
-    }, [fetchLoaderData, user]);    
+    const unsubscribe = () => onSnapshot(user.uid, 'transactions', querySnapshot => {
+      const snapshotTransactions = querySnapshot.docs.map(document => ({ ...document.data(), id: document.id }));
+      setTransactions(snapshotTransactions);
+    });
+    
+    return () => unsubscribe();
+  }, [fetchLoaderData, user]);    
 
-    const data = {
-      transactions,
-      transactionTypes,
-      transactionCategories,
-      accountTypes,
-      modifiedDocumentId,
-      setModifiedDocumentId,
-      fetchTransactions
-    };
+  const data = {
+    transactions,
+    transactionTypes,
+    transactionCategories,
+    accountTypes,
+    modifiedDocumentId,
+    setModifiedDocumentId,
+    fetchTransactions
+  };
 
-    return (
-        <TransactionsContext.Provider value={data}>
-            {children}
-        </TransactionsContext.Provider>
-    );
+  return (
+      <TransactionsContext.Provider value={data}>
+          {children}
+      </TransactionsContext.Provider>
+  );
 };
 
 export const UserTransactions = () => useContext(TransactionsContext);

@@ -33,7 +33,18 @@ const FormGroup = ({ labelText, controlType, controlProps, errorText, categories
     return (
         <Form.Group controlId={`form${spacelessLabelText}`}  className="m-2 flex-basis-100">
             {controlProps.name === 'categoryId' && (
-                <CategoriesDropdown items={items} isSmallImage={true} categories={categories} isDisabled={isDisabled} controlProps={controlProps} />
+                <Form.Control
+                    size="sm"
+                    disabled={isDisabled}
+                    // eslint-disable-next-line react/display-name
+                    as={React.forwardRef((props) => <CategoriesDropdown {...props} />)}
+                    items={items}
+                    categories={categories}
+                    isSmallImage={true}
+                    errorText={errorText}
+                    isDisabled={isDisabled}
+                    controlProps={controlProps}
+                />
             )}
 
             {controlType !== 'custom' && (
@@ -43,7 +54,7 @@ const FormGroup = ({ labelText, controlType, controlProps, errorText, categories
                             <option value={null}>-- select one --</option>
 
                             {items.map(({ id, definition, items = [] }) => (
-                            <Option key={`option-${spacelessLabelText}-${id}`} labelText={definition} value={id} />
+                                <Option key={`option-${spacelessLabelText}-${id}`} labelText={definition} value={id} />
                             ))}
                         </Form.Select>
                     )}
@@ -81,7 +92,8 @@ const AddTransactionForm = ({ isEditing = false, editingItemData, handleAddTrans
     const categories = categoryIds.filter(({ transactionTypeId }) => isRefund ? transactionTypeId === expenseTypeId : transactionTypeId === value);
 
     if (name === 'categoryId' && value) {
-        setFieldValue(name, value, true);
+        console.log('HERE: ', value)
+        setFieldValue(name, value, false);
     }
     
     if (name === 'typeId') {
@@ -105,7 +117,7 @@ const AddTransactionForm = ({ isEditing = false, editingItemData, handleAddTrans
         validateOnChange={false}
       >
         {({ handleSubmit, handleChange, values, touched, errors, setFieldValue }) => (
-            <Form noValidate onSubmit={handleSubmit}>
+            <Form noValidate id="transaction-form" onSubmit={handleSubmit}>
                 {formGroups.map((items, index) => (
                     <div key={`form-groups-${index}`} className="d-flex">
                         {items.map(({ labelText, controlType, controlProps: { name, ...controlProps } }) => (
