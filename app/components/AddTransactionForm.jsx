@@ -12,6 +12,7 @@ import FloatingLabel from 'react-bootstrap/FloatingLabel';
 
 // Custom Components.
 import CategoriesDropdown from '../components/CategoriesDropdown';
+import TypeAhead from '../components/TypeAhead';
 
 // Custom Imports.
 import { UserTransactions } from '@/app/lib/context/TransactionsContext';
@@ -37,7 +38,7 @@ const FormGroup = ({ labelText, controlType, controlProps, errorText, categories
                     size="sm"
                     disabled={isDisabled}
                     // eslint-disable-next-line react/display-name
-                    as={React.forwardRef((props) => <CategoriesDropdown {...props} />)}
+                    as={React.forwardRef((props, ref) => <CategoriesDropdown {...props} ref={ref} />)}
                     items={items}
                     categories={categories}
                     isSmallImage={true}
@@ -45,6 +46,10 @@ const FormGroup = ({ labelText, controlType, controlProps, errorText, categories
                     isDisabled={isDisabled}
                     controlProps={controlProps}
                 />
+            )}
+
+            {controlProps.name === 'otherParty' && (
+                <TypeAhead controlProps={controlProps} />
             )}
 
             {controlType !== 'custom' && (
@@ -133,8 +138,10 @@ const AddTransactionForm = ({ isEditing = false, editingItemData, handleAddTrans
                                     ...controlProps,
                                     name,
                                     value: values[name],
-                                    onChange: event => handleOnChange(event, setFieldValue, handleChange),
-                                    isInvalid: !!errors[name]
+                                    isInvalid: !!errors[name],
+                                    ...(name === 'otherParty' ? {} : {
+                                        onChange: event => handleOnChange(event, setFieldValue, handleChange)
+                                    })
                                 }}
                             />
                         ))}

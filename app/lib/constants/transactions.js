@@ -34,11 +34,12 @@ export const formGroups = [[{
     }
   }], [{
     labelText: 'other party',
-    controlType: 'control',
+    controlType: 'custom',
     controlProps: {
       name: 'otherParty',
       'aria-label': 'Party who paid or received this transaction',
-      placeholder: 'Other Party'
+      placeholder: 'Other Party',
+      className: 'form-control form-control-sm'
     }
   }], [{
     labelText: 'date',
