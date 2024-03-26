@@ -2,7 +2,11 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { AsyncTypeahead } from 'react-bootstrap-typeahead';
+import FloatingLabel from 'react-bootstrap/FloatingLabel';
+import Form from 'react-bootstrap/Form';
+import { AsyncTypeahead, Hint } from 'react-bootstrap-typeahead';
+
+import { getDocuments } from '../lib/firebase/firestore';
 
 const SEARCH_URI = 'https://api.github.com/search/users';
 
@@ -10,15 +14,15 @@ const TypeAhead = ({ controlProps }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [options, setOptions] = useState([]);
 
-  const handleSearch = (query) => {
+  const { onChange, value, ...inputProps } = controlProps;
+
+  const handleSearch = async (query) => {
+    setOptions([])
     setIsLoading(true);
 
-    fetch(`${SEARCH_URI}?q=${query}+in:login&page=1&per_page=50`)
-      .then((resp) => resp.json())
-      .then(({ items }) => {
-        setOptions(items);
-        setIsLoading(false);
-      });
+    const otherParties = await getDocuments('otherParties', 'definition', false, query);
+    setOptions(otherParties);
+    setIsLoading(false);
   };
 
   const filterBy = () => true;
@@ -28,29 +32,39 @@ const TypeAhead = ({ controlProps }) => {
       filterBy={filterBy}
       id="async-example"
       isLoading={isLoading}
-      labelKey="login"
-      minLength={3}
+      isInvalid={inputProps.isInvalid}
+      labelKey="definition"
+      minLength={0}
       onSearch={handleSearch}
+      onChange={([{ definition = '' } = {}]) => onChange({ currentTarget: { value: definition, name: inputProps.name }})}
       options={options}
-      inputProps={controlProps}
-      placeholder="Search for a Github user..."
-      data-name={controlProps.name}
-      renderMenuItemChildren={(option) => (
-        <>
-          <img
-            alt={option.login}
-            src={option.avatar_url}
-            style={{
-              height: '24px',
-              marginRight: '10px',
-              width: '24px',
-            }}
-          />
+      inputProps={inputProps}
+      placeholder="Search for another party"
+      renderInput={({ inputRef, referenceElementRef, ...inputProps }) => (
+        <Hint>
+          <FloatingLabel controlId="floatingOtherParty" label="Other Party" className="flex-fill text-capitalize">
+            <Form.Control
+              {...inputProps}
+              size="sm"
+              // onChange={onChange}
+              ref={(input) => {
+                inputRef(input);
+                referenceElementRef(input);
+              }}
+            />
 
-          <span>{option.login}</span>
-        </>
+            <Form.Control.Feedback type="invalid" style={{ overflowWrap: 'break-word' }} className="text-start">
+                * Required Field
+            </Form.Control.Feedback>
+          </FloatingLabel>
+        </Hint>
       )}
     >
+      {/* {inputProps.isInvalid && (
+        <Form.Control.Feedback style={{ overflowWrap: 'break-word' }} className="d-block text-danger-emphasis text-start">
+          * Required Field
+        </Form.Control.Feedback>
+      )} */}
     </AsyncTypeahead>
   )
 }

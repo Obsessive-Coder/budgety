@@ -20,10 +20,17 @@ export function onSnapshot(userId, collectionName = '', callback) {
     return _onSnapshot(q, callback);    
 }
 
-export async function getDocuments(collectionName, orderField, isDesc = false) {
+export async function getDocuments(collectionName, orderField, isDesc = false, searchTerm = '') {
     try {
         const documentRef = collection(db, collectionName);
-        const  q = query(documentRef, ...orderField ? [orderBy(orderField, isDesc ? 'desc' : 'asc')] : []);
+
+        const  q = query(
+            documentRef,
+            ...(orderField ? [
+                ...(searchTerm ? [where(orderField, '>=', searchTerm), where(orderField, '<=', searchTerm + '\uf8ff')] : []),
+                orderBy(orderField, isDesc ? 'desc' : 'asc')
+            ] : [])
+        );
         const querySnapshot = await getDocs(q);
         return querySnapshot.docs.map((document) => ({id: document.id, ...document.data()}));
     } catch ({ code, message }) {

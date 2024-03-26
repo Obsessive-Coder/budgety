@@ -87,7 +87,7 @@ const TransactionTable = ({ setEditingItemData }) => {
   const totalAmount = transactions.reduce((prev, { id, amount }) => prev += getIsTransactionExpense(id) ? -amount : amount, 0);
 
   return (
-    <div>
+    <div className='flex-fill'>
       <div className="d-flex justify-content-between h4">
         <span>Transactions: {transactions.length}</span>
         <span className={`${totalAmount < 0 ? 'text-danger' : 'text-success'}`}>
