@@ -12,7 +12,8 @@ import {
     where,
     orderBy,
     limit,
-    onSnapshot as _onSnapshot
+    onSnapshot as _onSnapshot,
+    getDoc
 } from 'firebase/firestore';
 
 export function onSnapshot(userId, collectionName = '', callback) {
@@ -20,10 +21,32 @@ export function onSnapshot(userId, collectionName = '', callback) {
     return _onSnapshot(q, callback);    
 }
 
-export async function getDocuments(collectionName, orderField, isDesc = false) {
+export async function getDocumentById(collectionName, documentId) {
+    try {
+        const docRef = doc(db, collectionName, documentId);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+            return { id: documentId, ...docSnap.data()};
+        } else {
+            throw new Error({ code: 0, message: 'Unknown Document' });
+        }
+    } catch ({ code, message }) {
+        console.error(code, message);
+    }
+};
+
+export async function getDocuments(collectionName, orderField, isDesc = false, searchTerm = '') {
     try {
         const documentRef = collection(db, collectionName);
-        const  q = query(documentRef, ...orderField ? [orderBy(orderField, isDesc ? 'desc' : 'asc')] : []);
+
+        const  q = query(
+            documentRef,
+            ...(orderField ? [
+                ...(searchTerm ? [where(orderField, '>=', searchTerm), where(orderField, '<=', searchTerm + '\uf8ff')] : []),
+                orderBy(orderField, isDesc ? 'desc' : 'asc')
+            ] : [])
+        );
         const querySnapshot = await getDocs(q);
         return querySnapshot.docs.map((document) => ({id: document.id, ...document.data()}));
     } catch ({ code, message }) {

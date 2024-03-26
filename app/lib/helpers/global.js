@@ -4,6 +4,8 @@ export const camelToFlat = c => (c = c.replace(/[A-Z]/g, " $&"), c[0].toUpperCas
 
 export const removeWhitespace = value => value.replace(' ', '');
 
+export const capitalizeText = value => value.charAt(0).toUpperCase() + value.slice(1);
+
 export const USDollar = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',

@@ -12,6 +12,7 @@ import FloatingLabel from 'react-bootstrap/FloatingLabel';
 
 // Custom Components.
 import CategoriesDropdown from '../components/CategoriesDropdown';
+import TypeAhead from '../components/TypeAhead';
 
 // Custom Imports.
 import { UserTransactions } from '@/app/lib/context/TransactionsContext';
@@ -37,7 +38,7 @@ const FormGroup = ({ labelText, controlType, controlProps, errorText, categories
                     size="sm"
                     disabled={isDisabled}
                     // eslint-disable-next-line react/display-name
-                    as={React.forwardRef((props) => <CategoriesDropdown {...props} />)}
+                    as={React.forwardRef((props, ref) => <CategoriesDropdown {...props} ref={ref} />)}
                     items={items}
                     categories={categories}
                     isSmallImage={true}
@@ -45,6 +46,10 @@ const FormGroup = ({ labelText, controlType, controlProps, errorText, categories
                     isDisabled={isDisabled}
                     controlProps={controlProps}
                 />
+            )}
+
+            {controlProps.name === 'otherPartyId' && (
+                <TypeAhead controlProps={controlProps} />
             )}
 
             {controlType !== 'custom' && (
@@ -92,7 +97,10 @@ const AddTransactionForm = ({ isEditing = false, editingItemData, handleAddTrans
     const categories = categoryIds.filter(({ transactionTypeId }) => isRefund ? transactionTypeId === expenseTypeId : transactionTypeId === value);
 
     if (name === 'categoryId' && value) {
-        console.log('HERE: ', value)
+        setFieldValue(name, value, false);
+    }
+
+    if (name === 'otherPartyId' && !value) {
         setFieldValue(name, value, false);
     }
     
@@ -116,42 +124,44 @@ const AddTransactionForm = ({ isEditing = false, editingItemData, handleAddTrans
         initialValues={initialValues}
         validateOnChange={false}
       >
-        {({ handleSubmit, handleChange, values, touched, errors, setFieldValue }) => (
-            <Form noValidate id="transaction-form" onSubmit={handleSubmit}>
-                {formGroups.map((items, index) => (
-                    <div key={`form-groups-${index}`} className="d-flex">
-                        {items.map(({ labelText, controlType, controlProps: { name, ...controlProps } }) => (
-                            <FormGroup
-                                key={`formGroup-${labelText}`}
-                                labelText={labelText}
-                                controlType={controlType}
-                                items={selectItemsData[`${name}s`] || []}
-                                errorText={errors[name]}
-                                categories={categoryIds}
-                                isDisabled={name === 'categoryId' && (!values.typeId || values.typeId === '-- select one --')}
-                                controlProps={{
-                                    ...controlProps,
-                                    name,
-                                    value: values[name],
-                                    onChange: event => handleOnChange(event, setFieldValue, handleChange),
-                                    isInvalid: !!errors[name]
-                                }}
-                            />
-                        ))}
+        {({ handleSubmit, handleChange, values, touched, errors, setFieldValue }) => {
+            return (
+                <Form noValidate id="transaction-form" onSubmit={handleSubmit}>
+                    {formGroups.map((items, index) => (
+                        <div key={`form-groups-${index}`} className="d-flex">
+                            {items.map(({ labelText, controlType, controlProps: { name, ...controlProps } }) => (
+                                <FormGroup
+                                    key={`formGroup-${labelText}`}
+                                    labelText={labelText}
+                                    controlType={controlType}
+                                    items={selectItemsData[`${name}s`] || []}
+                                    errorText={errors[name]}
+                                    categories={categoryIds}
+                                    isDisabled={name === 'categoryId' && (!values.typeId || values.typeId === '-- select one --')}
+                                    controlProps={{
+                                        ...controlProps,
+                                        name,
+                                        value: values[name],
+                                        isInvalid: !!errors[name],
+                                        onChange: event => handleOnChange(event, setFieldValue, handleChange)
+                                    }}
+                                />
+                            ))}
+                        </div>
+                    ))}
+    
+                    <div className="d-flex justify-content-end p-2">
+                        <Button variant="link" onClick={handleCloseSidebar} className="text-danger">
+                            Cancel
+                        </Button>
+    
+                        <Button variant="outline-primary" type="submit" className="text-capitalize">
+                            {isEditing ? 'update transaction' : 'add transaction'}
+                        </Button>
                     </div>
-                ))}
-
-                <div className="d-flex justify-content-end p-2">
-                    <Button variant="link" onClick={handleCloseSidebar} className="text-danger">
-                        Cancel
-                    </Button>
-
-                    <Button variant="outline-primary" type="submit" className="text-capitalize">
-                        {isEditing ? 'update transaction' : 'add transaction'}
-                    </Button>
-                </div>
-            </Form>
-        )}
+                </Form>
+            )
+        }}
     </Formik>
   )
 }

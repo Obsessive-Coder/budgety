@@ -32,7 +32,7 @@ const TableSidebar = ({ userId, editingItemData, setEditingItemData }) => {
     setEditingItemData(null);
   };
 
-  const handleAddTransaction = async (transaction) => {
+  const handleAddTransaction = async transaction => {
     try {
       const newDoc = await addDocument('transactions', { ...transaction, userId });
 
