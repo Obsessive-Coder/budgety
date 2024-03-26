@@ -48,7 +48,7 @@ const FormGroup = ({ labelText, controlType, controlProps, errorText, categories
                 />
             )}
 
-            {controlProps.name === 'otherParty' && (
+            {controlProps.name === 'otherPartyId' && (
                 <TypeAhead controlProps={controlProps} />
             )}
 
@@ -100,7 +100,7 @@ const AddTransactionForm = ({ isEditing = false, editingItemData, handleAddTrans
         setFieldValue(name, value, false);
     }
 
-    if (name === 'otherParty' && !value) {
+    if (name === 'otherPartyId' && !value) {
         setFieldValue(name, value, false);
     }
     

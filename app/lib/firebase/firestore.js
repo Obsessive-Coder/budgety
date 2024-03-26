@@ -12,13 +12,29 @@ import {
     where,
     orderBy,
     limit,
-    onSnapshot as _onSnapshot
+    onSnapshot as _onSnapshot,
+    getDoc
 } from 'firebase/firestore';
 
 export function onSnapshot(userId, collectionName = '', callback) {
     const q = query(collection(db, collectionName), where('userId', '==', userId));
     return _onSnapshot(q, callback);    
 }
+
+export async function getDocumentById(collectionName, documentId) {
+    try {
+        const docRef = doc(db, collectionName, documentId);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+            return { id: documentId, ...docSnap.data()};
+        } else {
+            throw new Error({ code: 0, message: 'Unknown Document' });
+        }
+    } catch ({ code, message }) {
+        console.error(code, message);
+    }
+};
 
 export async function getDocuments(collectionName, orderField, isDesc = false, searchTerm = '') {
     try {

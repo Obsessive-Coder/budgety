@@ -10,7 +10,7 @@ import TableSidebar from '../components/TableSidebar';
 import { UserAuth } from '@/app/lib/context/AuthContext';
 import { UserTransactions, TransactionsProvider } from '@/app/lib/context/TransactionsContext';
 import { transactionsColumnLabels } from '@/app/lib/constants/transactions';
-import { addDocument, deleteDocument } from '@/app/lib/firebase/firestore';
+import { addDocument, deleteDocument, getDocumentById, getDocuments } from '@/app/lib/firebase/firestore';
 import { USDollar } from '@/app/lib/helpers/global';
 
 const TransactionTable = ({ setEditingItemData }) => {
@@ -37,6 +37,13 @@ const TransactionTable = ({ setEditingItemData }) => {
 
   const getIdColumnText = (dataKey, dataId) => {
     const staticData = { typeId: transactionTypes, categoryId: transactionCategories, accountId: accountTypes };
+
+    if (dataKey === 'otherPartyId') {
+      // IMPORTANT: Finish this.'
+      return dataId;
+      // const otherParties = await getDocumentById('otherParties', dataId)
+      // staticData[dataKey] = [otherParties];
+    }
 
     return staticData[dataKey]
       ?.filter(({ id, items = [] }) => {

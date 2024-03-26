@@ -1,14 +1,14 @@
 'use client'
 
 import React, { useState } from 'react';
-import Image from 'next/image';
-import FloatingLabel from 'react-bootstrap/FloatingLabel';
+
+// React Bootstrap Components.
 import Form from 'react-bootstrap/Form';
+import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import { AsyncTypeahead, Hint } from 'react-bootstrap-typeahead';
 
+// Custom Imports.
 import { getDocuments } from '../lib/firebase/firestore';
-
-const SEARCH_URI = 'https://api.github.com/search/users';
 
 const TypeAhead = ({ controlProps }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -36,17 +36,17 @@ const TypeAhead = ({ controlProps }) => {
       labelKey="definition"
       minLength={0}
       onSearch={handleSearch}
-      onChange={([{ definition = '' } = {}]) => onChange({ currentTarget: { value: definition, name: inputProps.name }})}
+      onChange={([{ id, definition } = {}]) => onChange({ currentTarget: { value: definition, name: inputProps.name }})}
       options={options}
       inputProps={inputProps}
       placeholder="Search for another party"
+      className="text-capitalize"
       renderInput={({ inputRef, referenceElementRef, ...inputProps }) => (
         <Hint>
           <FloatingLabel controlId="floatingOtherParty" label="Other Party" className="flex-fill text-capitalize">
             <Form.Control
               {...inputProps}
               size="sm"
-              // onChange={onChange}
               ref={(input) => {
                 inputRef(input);
                 referenceElementRef(input);
@@ -59,13 +59,7 @@ const TypeAhead = ({ controlProps }) => {
           </FloatingLabel>
         </Hint>
       )}
-    >
-      {/* {inputProps.isInvalid && (
-        <Form.Control.Feedback style={{ overflowWrap: 'break-word' }} className="d-block text-danger-emphasis text-start">
-          * Required Field
-        </Form.Control.Feedback>
-      )} */}
-    </AsyncTypeahead>
+    />
   )
 }
 
